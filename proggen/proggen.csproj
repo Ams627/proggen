@@ -50,6 +50,7 @@
     <Compile Include="GeneratorManager.cs" />
     <Compile Include="Generators\Common\CommonFileSpecs.cs" />
     <Compile Include="Generators\Common\CSConsoleFilespecs.cs" />
+    <Compile Include="Generators\Common\CsWpfFileSpecs.cs" />
     <Compile Include="Generators\Common\FileSpec.cs" />
     <Compile Include="Generators\Common\MacroAttribute.cs" />
     <Compile Include="Generators\Common\MacroBase.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Generators\CPP17\cpp17.cs" />
     <Compile Include="Generators\CS15\cs15.cs" />
     <Compile Include="Generators\CS17\cs17.cs" />
+    <Compile Include="Generators\WPF15\wpf15.cs" />
+    <Compile Include="Generators\WPF17\wpf17.cs" />
     <Compile Include="ProgramGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,8 +75,6 @@
   <ItemGroup>
     <Folder Include="Generators\NetCore15\" />
     <Folder Include="Generators\NetCore17\" />
-    <Folder Include="Generators\WPF15\" />
-    <Folder Include="Generators\WPF17\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
