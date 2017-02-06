@@ -1,0 +1,4 @@
+"Microsoft Visual Studio Solution File, Format Version 12.00"
+"Project(\"$$(PROJECTTYPEGUID)\") = \"$$(PROJECTNAME)\", \"$$(PROJECTNAME)\\$$(PROJECTNAME).$$(SUFFIX)\", \"{$$(PROJECTGUID)}\""
+"Microsoft Visual Studio Solution File, Format Version 12.00"
+"Project(\"$$(PROJECTTYPEGUID)\") = \"$$(PROJNAME)\", \"$$(PRONAME)\\$$(PROJNAME)$$(PROJSUFFIX)\", \"$$(PROJECTGUID)\""
