@@ -18,5 +18,7 @@ namespace Proggen
         public override string ProjectSuffix => "csproj";
         public override string Command => "OpenCSharpConApp";
         public override FileSpec[] FileSpecs => Proggen.Generators.Common.CSConsoleFileSpecs.CSConsoleSpecs;
+        public override List<string> Folders => null;
+
     }
 }

@@ -21,6 +21,7 @@ namespace Proggen
         public abstract string ProjectSuffix { get; }       // project suffix - e.g. "csproj"
         public abstract string Command { get; }             // command to run on opening VS
         public abstract FileSpec[] FileSpecs { get; }       // array of file specifiers
+        public abstract List<string> Folders { get; }       // any empty folders required - can be null
         public virtual void Generate()
         {
             VSMacros.GeneratorName = Name;
@@ -32,6 +33,16 @@ namespace Proggen
             VSMacros.VSCommand = Command;
             VSMacros.ProjectSuffix = ProjectSuffix;
             VSMacros.SolutionConfig = SolutionConfig;
+
+            // Make empty folders
+            foreach (var folder in Folders)
+            {
+                var pathname = Path.Combine(VSMacros.ProjectName, VSMacros.ExpandMacros(folder));
+                if (!Directory.Exists(pathname))
+                {
+                    Directory.CreateDirectory(pathname);
+                }
+            }
 
             foreach (var filespec in FileSpecs)
             {

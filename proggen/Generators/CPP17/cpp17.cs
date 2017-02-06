@@ -18,5 +18,7 @@ namespace Proggen
         public override string ProjectSuffix => "vcxproj";
         public override string Command => "OpenConApp";
         public override FileSpec[] FileSpecs => Proggen.Generators.Common.CPPFileSpecs.CPPSpecs;
+        public override List<string> Folders => null;
+
     }
 }

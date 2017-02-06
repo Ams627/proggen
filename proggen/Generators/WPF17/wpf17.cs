@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Proggen.Generators.Common;
 
 namespace Proggen
@@ -13,6 +14,8 @@ namespace Proggen
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
         public override string Command => "OpenWPFApp";
-        public override FileSpec[] FileSpecs => Proggen.Generators.Common.CsWpfFileSpecs.CSWpfSpecs;
+        public override FileSpec[] FileSpecs => null;
+        public override List<string> Folders => null;
+
     }
 }
