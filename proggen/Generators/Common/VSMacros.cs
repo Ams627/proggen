@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Proggen.Generators.Common
 {
-    public class VSMacros : MacroBase<VSMacros>
+    public class VSGlobals : MacroBase<VSGlobals>
     {
         [Macro("VSVERSION")] public static string VisualStudioVersion { get; set; }
         [Macro("PLATFORMTOOLSET")] public static string PlatformToolset { get; set; }
@@ -20,5 +20,6 @@ namespace Proggen.Generators.Common
         [Macro("SOLUTIONCONFIGNOSPACE")] public static string SolutionConfigNoSpace => SolutionConfig.Replace(" ", "");
         [Macro("GENERATEDDATE")] public static DateTime GeneratedDate { get; set; }
         [Macro("SUFFIX")] public static string ProjectSuffix { get; set; }
+        public static bool DoGit { get; set; } = false;
     }
 }

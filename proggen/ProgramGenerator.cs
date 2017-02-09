@@ -24,22 +24,22 @@ namespace Proggen
         public abstract List<string> Folders { get; }       // any empty folders required - can be null
         public virtual void Generate()
         {
-            VSMacros.GeneratorName = Name;
-            VSMacros.GeneratedDate = DateTime.Now;
-            VSMacros.ProjectGUID = Guid.NewGuid();
-            VSMacros.ProjectTypeGuid = ProjectTypeGUID;
-            VSMacros.VisualStudioVersion = VSVersion;
-            VSMacros.PlatformToolset = PlatformToolset;
-            VSMacros.VSCommand = Command;
-            VSMacros.ProjectSuffix = ProjectSuffix;
-            VSMacros.SolutionConfig = SolutionConfig;
+            VSGlobals.GeneratorName = Name;
+            VSGlobals.GeneratedDate = DateTime.Now;
+            VSGlobals.ProjectGUID = Guid.NewGuid();
+            VSGlobals.ProjectTypeGuid = ProjectTypeGUID;
+            VSGlobals.VisualStudioVersion = VSVersion;
+            VSGlobals.PlatformToolset = PlatformToolset;
+            VSGlobals.VSCommand = Command;
+            VSGlobals.ProjectSuffix = ProjectSuffix;
+            VSGlobals.SolutionConfig = SolutionConfig;
 
             // Make empty folders if any are specified:
             if (Folders != null)
             {
                 foreach (var folder in Folders)
                 {
-                    var pathname = Path.Combine(VSMacros.ProjectName, VSMacros.ExpandMacros(folder));
+                    var pathname = Path.Combine(VSGlobals.ProjectName, VSGlobals.ExpandMacros(folder));
                     if (!Directory.Exists(pathname))
                     {
                         Directory.CreateDirectory(pathname);
@@ -49,7 +49,7 @@ namespace Proggen
 
             foreach (var filespec in FileSpecs)
             {
-                var pathname = Path.Combine(VSMacros.ProjectName, VSMacros.ExpandMacros(filespec.Pathname));
+                var pathname = Path.Combine(VSGlobals.ProjectName, VSGlobals.ExpandMacros(filespec.Pathname));
 
                 // get relative dir from filename (i.e. relative to current working directory):
                 var fullRelativeDir = Path.GetDirectoryName(pathname);
@@ -63,14 +63,14 @@ namespace Proggen
             var cmdscriptLines = new List<string>() {
                 "rem echo off",
                 @"echo done >c:\temp\gitdone.txt",
-                $"git init {VSMacros.ProjectName}",
-                $"cd {VSMacros.ProjectName}"
+                $"git init {VSGlobals.ProjectName}",
+                $"cd {VSGlobals.ProjectName}"
             };
 
             foreach (var filespec in FileSpecs)
             {
-                var relativePathname = VSMacros.ExpandMacros(filespec.Pathname);
-                var fullPathname = Path.Combine(VSMacros.ProjectName, relativePathname);
+                var relativePathname = VSGlobals.ExpandMacros(filespec.Pathname);
+                var fullPathname = Path.Combine(VSGlobals.ProjectName, relativePathname);
                 if (filespec.GitAdd)
                 {
                     cmdscriptLines.Add($"git add {relativePathname}");
@@ -79,13 +79,13 @@ namespace Proggen
                 {
                     foreach (var line in filespec.Contents)
                     {
-                        var outputline = VSMacros.ExpandMacros(line);
+                        var outputline = VSGlobals.ExpandMacros(line);
                         file.WriteLine(outputline.Replace("\n", "\r\n"));
                     }
                 }
             }
 
-            File.WriteAllLines(Path.Combine(VSMacros.ProjectName, gitCmdScript), cmdscriptLines);
+            File.WriteAllLines(Path.Combine(VSGlobals.ProjectName, gitCmdScript), cmdscriptLines);
             Process process = new Process();
             process.StartInfo.FileName = "cmd";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -93,7 +93,7 @@ namespace Proggen
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.Arguments = "/c" + Path.Combine(VSMacros.ProjectName, gitCmdScript);
+            process.StartInfo.Arguments = "/c" + Path.Combine(VSGlobals.ProjectName, gitCmdScript);
 
             var dir = Directory.GetCurrentDirectory();
             //process.StartInfo.WorkingDirectory = Path.Combine(dir, VSMacros.ProjectName);

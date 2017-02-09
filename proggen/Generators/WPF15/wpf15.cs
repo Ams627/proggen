@@ -18,7 +18,7 @@ namespace Proggen
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
         public override string Command => "OpenWPFApp";
-        public override FileSpec[] FileSpecs => null;
+        public override FileSpec[] FileSpecs => CsWpfFileSpecs.CSWpfSpecs;
         public override List<string> Folders => null;
 
     }

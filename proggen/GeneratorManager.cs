@@ -129,8 +129,8 @@ namespace Proggen
 
             Process process = new Process();
             process.StartInfo.FileName = vsExecutableName;
-            var command = String.IsNullOrWhiteSpace(VSMacros.VSCommand) ? "" : " /command " + VSMacros.VSCommand;
-            process.StartInfo.Arguments = Path.Combine(VSMacros.ProjectName, VSMacros.ProjectName + ".sln") + command;
+            var command = String.IsNullOrWhiteSpace(VSGlobals.VSCommand) ? "" : " /command " + VSGlobals.VSCommand;
+            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + command;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
         }

@@ -51,6 +51,7 @@
     <Compile Include="Generators\Common\AutoRegisterAttribute.cs" />
     <Compile Include="Generators\Common\CommonFileSpecs.cs" />
     <Compile Include="Generators\Common\CSConsoleFilespecs.cs" />
+    <Compile Include="Generators\Common\CsWpfFileSpecs.cs" />
     <Compile Include="Generators\Common\FileSpec.cs" />
     <Compile Include="Generators\Common\MacroAttribute.cs" />
     <Compile Include="Generators\Common\MacroBase.cs" />

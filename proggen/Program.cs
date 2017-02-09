@@ -20,7 +20,7 @@ namespace Proggen
             }
             else
             {
-                VSMacros.ProjectName = projectname;
+                VSGlobals.ProjectName = projectname;
                 if (string.IsNullOrWhiteSpace(generator))
                 {
                     generator = progname;
@@ -31,8 +31,8 @@ namespace Proggen
 
         static void Main(string[] args)
         {
-            VSMacros.ProjectGUID = Guid.NewGuid();
-            var s = VSMacros.ExpandMacros("$$(PROJECTGUID)");
+            VSGlobals.ProjectGUID = Guid.NewGuid();
+            var s = VSGlobals.ExpandMacros("$$(PROJECTGUID)");
 
             var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
             progname = Path.GetFileNameWithoutExtension(codeBase);
@@ -62,9 +62,17 @@ namespace Proggen
                 if (GeneratorManager.IsAGenarator(progname))
                 {
                     Console.WriteLine("Found generator");
+                    int count = 0;
                     foreach (var arg in args)
                     {
-                        DoGenerate(arg);
+                        if (arg == "-g" && count++ == 0)
+                        {
+                            VSGlobals.DoGit = true;
+                        }
+                        else
+                        {
+                            DoGenerate(arg);
+                        }
                     }
                 }
                 else if (args.Count() > 1)
@@ -74,8 +82,22 @@ namespace Proggen
                     var generatorName = args[0];
                     for (var i = 0; i < args.Count() - 1; i++)
                     {
-                        var directory = args[i + 1];
-                        DoGenerate(directory, generatorName);
+                        var arg = args[i + 1];
+                        if (arg == "-g")
+                        {
+                            if (i == 0)
+                            {
+                                VSGlobals.DoGit = true;
+                            }
+                            else
+                            {
+                                throw new Exception("-g must be the first argument")
+                            }
+                        }
+                        else
+                        {
+                            DoGenerate(arg, generatorName);
+                        }
                     }
                 }
                 else
