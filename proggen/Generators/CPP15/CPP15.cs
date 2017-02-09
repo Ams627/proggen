@@ -7,10 +7,11 @@ using Proggen.Generators.Common;
 
 namespace Proggen
 {
+    [AutoRegister]
     class CPP15 : ProgramGenerator
     {
-        public override string Name => "pg15";
-        public override string Description => "Generate a C++ Win32 console application for Visual Studio 2015 - windows.h included.";
+        public override string Name => "cpp15|pg15";
+        public override string Description => "Generate a C++ Win32 console app for VS 2015 - windows.h included.";
         public override string VSVersion => "2015";
         public override string PlatformToolset => "v140";
         public override Guid ProjectTypeGUID => ProjectTypeGUIDs.cppGuid;

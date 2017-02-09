@@ -66,7 +66,7 @@ namespace Proggen.Generators.Common
                     "[assembly: AssemblyConfiguration(\"\")]",
                     "[assembly: AssemblyCompany(\"\")]",
                     "[assembly: AssemblyProduct(\"$$(PROJECTNAME)\")]",
-                    "[assembly: AssemblyCopyright(\"Copyright Â© Whoever put this delectable program together 2017\")]",
+                    "[assembly: AssemblyCopyright(\"Copyright © Whoever put this wonderful program together 2017\")]",
                     "[assembly: AssemblyTrademark(\"\")]",
                     "[assembly: AssemblyCulture(\"\")]",
                     "",

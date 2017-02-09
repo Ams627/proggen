@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeneratorManager.cs" />
+    <Compile Include="Generators\Common\AutoRegisterAttribute.cs" />
     <Compile Include="Generators\Common\CommonFileSpecs.cs" />
     <Compile Include="Generators\Common\CSConsoleFilespecs.cs" />
     <Compile Include="Generators\Common\FileSpec.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Generators\WebAPI17\WebAPI17.cs" />
     <Compile Include="Generators\WPF15\wpf15.cs" />
     <Compile Include="Generators\WPF17\wpf17.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="ProgramGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,7 +80,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) u:\</PostBuildEvent>
+    <PostBuildEvent>$(TargetPath) -makeg
+copy $(TargetDir)\*.exe u:\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

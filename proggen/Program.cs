@@ -11,32 +11,81 @@ namespace Proggen
 {
     class Program
     {
+        private static string progname;
+        private static void DoGenerate(string projectname, string generator="")
+        {
+            if (File.Exists(projectname) || Directory.Exists(projectname))
+            {
+                Console.Error.WriteLine($"{progname}: file or directory {projectname} already exists.");
+            }
+            else
+            {
+                VSMacros.ProjectName = projectname;
+                if (string.IsNullOrWhiteSpace(generator))
+                {
+                    generator = progname;
+                }
+                GeneratorManager.Generate(generator);
+            }
+        }
+
         static void Main(string[] args)
         {
+            VSMacros.ProjectGUID = Guid.NewGuid();
+            var s = VSMacros.ExpandMacros("$$(PROJECTGUID)");
+
+            var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+            progname = Path.GetFileNameWithoutExtension(codeBase);
             try
             {
-                var p = new GeneratorManager();
-                p.MakeAllGenerators();
-                var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-                var progname = Path.GetFileNameWithoutExtension(codeBase);
-                if (args.Count() < 2)
+                if (args.Count() == 0)
                 {
-                    throw new Exception("You must supply at least two arguments");
+                    Console.WriteLine($"{progname} - make various types of Visual Studio solution and start Visual Studio.\n");
+                    Console.WriteLine("Usage:\n\n    proggen <SOLUTIONTYPE> <solution-name> <solution-name> ...\n");
+                    Console.WriteLine("An instance of Visual Studio is started for each solution name specified.");
+                    Console.WriteLine("Solutions types are as follows:\n");
+                    foreach (var helpText in GeneratorManager.HelpTexts)
+                    {
+                        Console.WriteLine(helpText);
+                    }
+                    Console.WriteLine("\nAlternatively if this program has the name of one of the solution types\nabove, the solution type parameter is not needed (the solution type is determined from the program name).");
+                    Console.WriteLine($"\nSpecifying {progname} -makeg with no other parameters causes proggen to\ncopy itself to each of the solution-types specified above (with\na .exe extension)");
+                    Environment.Exit(0);
                 }
-                var generator = args[0];
-                var dirname = args[1];
-                if (File.Exists(dirname))
+                if (args.Count() == 1 && args[0] == "-makeg")
                 {
-                    throw new Exception($"File {dirname} already exists.");
+                    GeneratorManager.MakeAllGenerators();
+                    Environment.Exit(0);
                 }
-                VSMacros.ProjectName = dirname;
-                GeneratorManager.Generate(generator);
+
+                // is the program name a generator name?
+                if (GeneratorManager.IsAGenarator(progname))
+                {
+                    Console.WriteLine("Found generator");
+                    foreach (var arg in args)
+                    {
+                        DoGenerate(arg);
+                    }
+                }
+                else if (args.Count() > 1)
+                {
+                    // the program name was not the name of a generator so the first argument is the generator
+                    // and the subsequent arguments are the programs to be generated:
+                    var generatorName = args[0];
+                    for (var i = 0; i < args.Count() - 1; i++)
+                    {
+                        var directory = args[i + 1];
+                        DoGenerate(directory, generatorName);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Syntax error");
+                }
             }
             catch (Exception ex)
             {
-                string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-                string progname = Path.GetFileNameWithoutExtension(codeBase);
-                Console.Error.WriteLine(progname + ": Error: " + ex.ToString());
+                Console.Error.WriteLine(progname + ": Error: " + ex.Message);
             }
         }
     }

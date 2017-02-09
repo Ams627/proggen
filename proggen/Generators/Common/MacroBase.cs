@@ -64,15 +64,30 @@ namespace Proggen.Generators.Common
                     string result;
                     if (memberInfo is PropertyInfo)
                     {
-                        result = (memberInfo as PropertyInfo).GetValue(null).ToString();
+                        var pi = memberInfo as PropertyInfo;
+                        result = pi.GetValue(null).ToString();
+                        if (pi.PropertyType == typeof(Guid))
+                        {
+                            result = result.ToUpper();
+                        }
                     }
                     else if (memberInfo is FieldInfo)
                     {
-                        result = (memberInfo as FieldInfo).GetValue(null).ToString();
+                        var fi = memberInfo as FieldInfo;
+                        result = fi.GetValue(null).ToString();
+                        if (fi.FieldType == typeof(Guid))
+                        {
+                            result = result.ToUpper();
+                        }
                     }
                     else
                     {
                         result = "MACRO EXPANSION ERROR";
+                    }
+                    var t = memberInfo.GetType();
+                    if (memberInfo.GetType() == typeof(Guid))
+                    {
+                        result = result.ToUpper();
                     }
                     outputString += result;
                 }

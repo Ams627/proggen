@@ -4,10 +4,11 @@ using Proggen.Generators.Common;
 
 namespace Proggen.Generators.WebAPI17
 {
+    [AutoRegister]
     class WebAPI17 : ProgramGenerator
     {
         public override string Name => "WebAPI17";
-        public override string Description => "Generate a .Net Core 1.1 Web API project";
+        public override string Description => "Generate a .Net Core 1.1 Web API project for Visual Studio 2017";
         public override string VSVersion => "2017";
         public override string PlatformToolset => "v141";
         public override Guid ProjectTypeGUID => ProjectTypeGUIDs.csGuid;

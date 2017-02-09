@@ -12,7 +12,7 @@ namespace Proggen
 {
     internal abstract class ProgramGenerator
     {
-        public abstract string Name { get; }
+        public abstract string Name { get; }                // name of generator - use vertical bar ("pipe") character for aliases
         public abstract string Description { get; }         // description for command-line help
         public abstract string VSVersion { get; }           // version of Visual Studio to start
         public abstract string PlatformToolset { get; }     // version of Visual Studio toolset to use (v140 or v141)
@@ -34,13 +34,16 @@ namespace Proggen
             VSMacros.ProjectSuffix = ProjectSuffix;
             VSMacros.SolutionConfig = SolutionConfig;
 
-            // Make empty folders
-            foreach (var folder in Folders)
+            // Make empty folders if any are specified:
+            if (Folders != null)
             {
-                var pathname = Path.Combine(VSMacros.ProjectName, VSMacros.ExpandMacros(folder));
-                if (!Directory.Exists(pathname))
+                foreach (var folder in Folders)
                 {
-                    Directory.CreateDirectory(pathname);
+                    var pathname = Path.Combine(VSMacros.ProjectName, VSMacros.ExpandMacros(folder));
+                    if (!Directory.Exists(pathname))
+                    {
+                        Directory.CreateDirectory(pathname);
+                    }
                 }
             }
 

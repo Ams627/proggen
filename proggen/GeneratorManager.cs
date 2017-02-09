@@ -13,35 +13,60 @@ namespace Proggen
 {
     class GeneratorManager
     {
+        private static HashSet<string> _generatorNames;
+        public static List<string> HelpTexts { get; private set;}
         static GeneratorManager()
         {
+            HelpTexts = new List<string>();
             var currAssembly = Assembly.GetExecutingAssembly();
+            _generatorNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var type in currAssembly.GetTypes())
             {
-                if (type.IsSubclassOf(typeof(ProgramGenerator)))
+                if (type.IsDefined(typeof(AutoRegisterAttribute)))
                 {
-                    Console.WriteLine(type.ToString());
-                    var generator = (ProgramGenerator)Activator.CreateInstance(type);
-                    Generators.Add(generator.Name, generator);
+                    if (type.IsSubclassOf(typeof(ProgramGenerator)))
+                    {
+                        var generator = (ProgramGenerator)Activator.CreateInstance(type);
+                        var names = generator.Name.Split('|');
+
+                        names.ForEachExceptTheLast(
+                            x => HelpTexts.Add($"{x} or"),
+                            x => HelpTexts.Add($"{names.Last(),-10}{generator.Description}")
+                            );
+
+                        foreach (var name in names)
+                        {
+                            Generators.Add(name, generator);
+                            _generatorNames.Add(name);
+                        }
+                    }
                 }
             }
         }
 
-        private static readonly Dictionary<string, ProgramGenerator> Generators = new Dictionary<string, ProgramGenerator>();
+        private static readonly Dictionary<string, ProgramGenerator> Generators = new Dictionary<string, ProgramGenerator>(StringComparer.OrdinalIgnoreCase);
 
-        public void MakeAllGenerators()
+        public static void MakeAllGenerators()
         {
             var fullpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var dir = Path.GetDirectoryName(fullpath);
             foreach (var g in Generators)
             {
-                var fullGeneratorPath = Path.Combine(dir, g.Value.Name) + ".exe";
-                if (!File.Exists(fullGeneratorPath))
+                foreach (var name in g.Value.Name.Split('|'))
                 {
-                    File.Copy(fullpath, fullGeneratorPath);
+                    var fullGeneratorPath = Path.Combine(dir, name.Trim()) + ".exe";
+                    if (!File.Exists(fullGeneratorPath))
+                    {
+                        File.Copy(fullpath, fullGeneratorPath);
+                    }
                 }
             }
+        }
+
+        public static bool IsAGenarator(string s)
+        {
+            return _generatorNames.Contains(s);
         }
 
         public static void Generate(string progname)
