@@ -22,7 +22,6 @@ namespace Proggen.Generators.Common
             var memberlist = fields.ToList<MemberInfo>().Concat(properties.ToList<MemberInfo>());
 
             var pcount = properties.Count();
-            Console.WriteLine("count is {0}", pcount);
             var attType = typeof(MacroAttribute);
 
             foreach (var prop in memberlist)

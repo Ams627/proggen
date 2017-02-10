@@ -13,7 +13,7 @@ namespace Proggen
         /// </summary>
         /// <typeparam name="T">the thing that l is a list of</typeparam>
         /// <param name="l">the list</param>
-        static void Shift<T>(ref List<T> l)
+        public static void Shift<T>(ref List<T> l)
         {
             for (int i = 1; i < l.Count(); i++)
             {

@@ -38,6 +38,8 @@ namespace Proggen
             progname = Path.GetFileNameWithoutExtension(codeBase);
             try
             {
+                var arglist = args.ToList();
+                
                 if (args.Count() == 0)
                 {
                     Console.WriteLine($"{progname} - make various types of Visual Studio solution and start Visual Studio.\n");
@@ -52,57 +54,82 @@ namespace Proggen
                     Console.WriteLine($"\nSpecifying {progname} -makeg with no other parameters causes proggen to\ncopy itself to each of the solution-types specified above (with\na .exe extension)");
                     Environment.Exit(0);
                 }
-                if (args.Count() == 1 && args[0] == "-makeg")
+                else if (args[0] == "-makeg")
                 {
+                    if (args.Count() > 1)
+                    {
+                        throw new Exception("-makeg option does not take parameters");
+                    }
                     GeneratorManager.MakeAllGenerators();
                     Environment.Exit(0);
                 }
 
+                var generatorName = "";
                 // is the program name a generator name?
                 if (GeneratorManager.IsAGenarator(progname))
                 {
-                    Console.WriteLine("Found generator");
-                    int count = 0;
-                    foreach (var arg in args)
+                    generatorName = progname;
+                    if (arglist[0] == "-g")
                     {
-                        if (arg == "-g" && count++ == 0)
+                        if (arglist.Count < 2)
                         {
-                            VSGlobals.DoGit = true;
+                            throw new Exception("You must specify the name of a project to create.");
                         }
-                        else
-                        {
-                            DoGenerate(arg);
-                        }
-                    }
-                }
-                else if (args.Count() > 1)
-                {
-                    // the program name was not the name of a generator so the first argument is the generator
-                    // and the subsequent arguments are the programs to be generated:
-                    var generatorName = args[0];
-                    for (var i = 0; i < args.Count() - 1; i++)
-                    {
-                        var arg = args[i + 1];
-                        if (arg == "-g")
-                        {
-                            if (i == 0)
-                            {
-                                VSGlobals.DoGit = true;
-                            }
-                            else
-                            {
-                                throw new Exception("-g must be the first argument")
-                            }
-                        }
-                        else
-                        {
-                            DoGenerate(arg, generatorName);
-                        }
+                        VSGlobals.DoGit = true;
+                        Utility.Shift(ref arglist);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Syntax error");
+                    bool haveOption = arglist[0][0] == '-';
+                    var minargs = haveOption ? 3 : 2;
+                    if (arglist.Count < minargs)
+                    {
+                        throw new Exception("You must specify at least one project name.");
+                    }
+
+                    if (haveOption)
+                    {
+                        var option = arglist[0];
+                        if (option != "-g")
+                        {
+                            throw new Exception($"'{option}' is an invalid option");
+                        }
+                        VSGlobals.DoGit = true;
+                        Utility.Shift(ref arglist);
+                    }
+
+                    generatorName = arglist[0];
+                    if (!GeneratorManager.IsAGenarator(generatorName))
+                    {
+                        throw new Exception($"'{generatorName}' is not a valid project type.");
+                    }
+                    Utility.Shift(ref arglist);
+
+                    // alternatively an option can go after the project type:
+                    var optionAfterGenerator = arglist[0][0] == '-';
+                    if (optionAfterGenerator)
+                    {
+                        var option = arglist[0];
+                        if (option != "-g")
+                        {
+                            throw new Exception($"'{option}' is an invalid option");
+                        }
+                        VSGlobals.DoGit = true;
+                        Utility.Shift(ref arglist);
+                    }
+                }
+
+                foreach (var project in arglist)
+                {
+                    if (project[0] ==  '-')
+                    {
+                        Console.Error.WriteLine($"{progname}: option {project} ignored.");
+                    }
+                    else
+                    {
+                        DoGenerate(project, generatorName);
+                    }
                 }
             }
             catch (Exception ex)

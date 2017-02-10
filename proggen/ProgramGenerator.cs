@@ -86,20 +86,25 @@ namespace Proggen
             }
 
             File.WriteAllLines(Path.Combine(VSGlobals.ProjectName, gitCmdScript), cmdscriptLines);
-            Process process = new Process();
-            process.StartInfo.FileName = "cmd";
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.Arguments = "/c" + Path.Combine(VSGlobals.ProjectName, gitCmdScript);
 
-            var dir = Directory.GetCurrentDirectory();
-            //process.StartInfo.WorkingDirectory = Path.Combine(dir, VSMacros.ProjectName);
+            // only initialise a git repo if we have the -g option:
+            if (VSGlobals.DoGit)
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = "cmd";
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.Arguments = "/c" + Path.Combine(VSGlobals.ProjectName, gitCmdScript);
 
-            process.Start();
-            process.WaitForExit();
+                var dir = Directory.GetCurrentDirectory();
+                //process.StartInfo.WorkingDirectory = Path.Combine(dir, VSMacros.ProjectName);
+
+                process.Start();
+                process.WaitForExit();
+            }
         }
     }
 }

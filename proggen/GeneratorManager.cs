@@ -133,6 +133,9 @@ namespace Proggen
             process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + command;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
+            process.WaitForInputIdle();
+
+            Console.WriteLine($"{process.Id} {vsExecutableName} {command}");
         }
     }
 }
