@@ -14,6 +14,7 @@ namespace Proggen.Generators.Common
         [Macro("PROJECTNAME")] public static string ProjectName { get; set; }
         [Macro("PROJECTNAMECAMEL")] public static string ProjectNameCamel => ProjectName[0].ToString().ToUpper() + ProjectName.Substring(1);
         [Macro("VSCOMMAND")] public static string VSCommand { get; set; }
+        [Macro("VSCOMMANDPARAM")] public static string VSCommandParam { get; set; }
         [Macro("PROJECTGUID")] public static Guid ProjectGUID { get; set; }
         [Macro("PROJECTTYPEGUID")] public static Guid ProjectTypeGuid { get; set; }
         [Macro("SOLUTIONCONFIG")] public static string SolutionConfig { get; set; }

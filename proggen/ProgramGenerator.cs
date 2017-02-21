@@ -17,9 +17,10 @@ namespace Proggen
         public abstract string VSVersion { get; }           // version of Visual Studio to start
         public abstract string PlatformToolset { get; }     // version of Visual Studio toolset to use (v140 or v141)
         public abstract Guid ProjectTypeGUID { get; }       // predefined by VS
-        public abstract string SolutionConfig { get; }        // "Win32" or "Any CPU"
+        public abstract string SolutionConfig { get; }      // "Win32" or "Any CPU"
         public abstract string ProjectSuffix { get; }       // project suffix - e.g. "csproj"
         public abstract string Command { get; }             // command to run on opening VS
+        public abstract string CommandParam { get; }        // command to run on opening VS
         public abstract FileSpec[] FileSpecs { get; }       // array of file specifiers
         public abstract List<string> Folders { get; }       // any empty folders required - can be null
         public virtual void Generate()
@@ -31,6 +32,7 @@ namespace Proggen
             VSGlobals.VisualStudioVersion = VSVersion;
             VSGlobals.PlatformToolset = PlatformToolset;
             VSGlobals.VSCommand = Command;
+            VSGlobals.VSCommandParam = CommandParam;
             VSGlobals.ProjectSuffix = ProjectSuffix;
             VSGlobals.SolutionConfig = SolutionConfig;
 

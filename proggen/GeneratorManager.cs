@@ -129,7 +129,26 @@ namespace Proggen
 
             Process process = new Process();
             process.StartInfo.FileName = vsExecutableName;
-            var command = String.IsNullOrWhiteSpace(VSGlobals.VSCommand) ? "" : " /command " + VSGlobals.VSCommand;
+
+            // if command has a parameter then the whole command-plus-parameter string needs to be in quotes:
+            var command = "";
+            if (!string.IsNullOrWhiteSpace(VSGlobals.VSCommand))
+            {
+                if (!string.IsNullOrWhiteSpace(VSGlobals.VSCommandParam))
+                {
+                    command = "\"" + VSGlobals.VSCommand + " " + VSGlobals.VSCommandParam + "\"";
+                }
+                else
+                {
+                    command = VSGlobals.VSCommand;
+                }
+                command = "/command " + command;
+            }
+
+            if (!string.IsNullOrWhiteSpace(VSGlobals.VSCommandParam))
+            {
+                command = "\"" + command + " " + VSGlobals.VSCommandParam + "\"";
+            }
             process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + command;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();

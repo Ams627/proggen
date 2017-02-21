@@ -15,6 +15,7 @@ namespace Proggen.Generators.WebAPI17
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
         public override string Command => "";
+        public override string CommandParam => "program.cs";
         public override FileSpec[] FileSpecs => Proggen.Generators.Common.WebAPIFileSpecs.WebAPISpecs;
         public override List<string> Folders => new List<string> { "$$(PROJECTNAMECAMEL)/wwwroot" };
 
