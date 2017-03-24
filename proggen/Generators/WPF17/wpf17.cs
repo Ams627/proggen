@@ -14,8 +14,8 @@ namespace Proggen
         public override Guid ProjectTypeGUID => ProjectTypeGUIDs.csGuid;
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
-        public override string Command => "OpenWPFApp";
-        public override string CommandParam => "App.xaml.cs";
+        public override string Command => "OpenStartFile";
+        public override string CommandParam => "MainWindow.xaml.cs";
         public override FileSpec[] FileSpecs => CsWpfFileSpecs.CSWpfSpecs;
         public override List<string> Folders => null;
 

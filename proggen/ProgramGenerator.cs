@@ -64,9 +64,7 @@ namespace Proggen
             var gitCmdScript = "gitmehappy.cmd";
             var cmdscriptLines = new List<string>() {
                 "rem echo off",
-                @"echo done >c:\temp\gitdone.txt",
-                $"git init {VSGlobals.ProjectName}",
-                $"cd {VSGlobals.ProjectName}"
+                $"git init",
             };
 
             foreach (var filespec in FileSpecs)

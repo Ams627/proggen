@@ -63,6 +63,20 @@ namespace Proggen
                     GeneratorManager.MakeAllGenerators();
                     Environment.Exit(0);
                 }
+                else if (args[0] == "-instances")
+                {
+                    if (args.Count() > 1)
+                    {
+                        throw new Exception("-vsversions option does not take parameters");
+                    }
+                    var vs2017Info = new VS2017Info.Vs2017SetupConfig();
+                    var instances = vs2017Info.VSInstances;
+                    foreach (var instance in instances)
+                    {
+                        Console.WriteLine($"ID: {instance.Id} Path: {Path.Combine(instance.InstalledPath, instance.ProductPath)}");
+                    }
+                    Environment.Exit(0);
+                }
 
                 var generatorName = "";
                 // is the program name a generator name?
