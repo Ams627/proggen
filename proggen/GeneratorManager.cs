@@ -86,6 +86,8 @@ namespace Proggen
         public static void StartVisualStudio(string vsVersion)
         {
             var vsExecutableName="";
+            var command = string.IsNullOrWhiteSpace(VSGlobals.VSCommand) ? "" : VSGlobals.VSCommand;
+            var commandParam = "";
 
             if (vsVersion == "2010")
             {
@@ -113,30 +115,38 @@ namespace Proggen
             }
             else if (vsVersion == "2017")
             {
-                var vsConfig = new Vs2017Config();
-                var paths = vsConfig.InstallationPaths;
-                if (paths.Count > 1)
+                var vsConfig = new VS2017Info.Vs2017SetupConfig();
+                var instances = vsConfig.VSInstances;
+                if (instances.Count > 1)
                 {
                     var message = "Cannot start visual studio as I do not know which installed instance to use - it could be: \n";
-                    foreach (var path in paths)
+                    foreach (var instance in instances)
                     {
-                        message += path + "\n";
+                        message += Path.Combine(instance.InstalledPath, instance.ProductPath) + "\n";
                     }
                     throw new Exception(message);
                 }
-                vsExecutableName = paths[0];
+                vsExecutableName = Path.Combine(instances[0].InstalledPath, instances[0].ProductPath);
+
+                // find out if AMSExtensions present:
+                var extensions = VS2017Info.VS2017AppData.GetInstalledExtensions(instances[0].Version, instances[0].Id);
+                var amsExtPresent = extensions.Any(x => !string.IsNullOrWhiteSpace(x.Key) && x.Key.Split(',')[0] == "3c6063ca-5f33-4889-aaae-387e9d5a0368");
+                if (amsExtPresent)
+                {
+                    Console.WriteLine("AMS extensions found");
+                    commandParam = VSGlobals.VSCommandParam;
+                }
             }
 
             Process process = new Process();
             process.StartInfo.FileName = vsExecutableName;
 
             // if command has a parameter then the whole command-plus-parameter string needs to be in quotes:
-            var command = "";
-            if (!string.IsNullOrWhiteSpace(VSGlobals.VSCommand))
+            if (!string.IsNullOrWhiteSpace(command))
             {
-                if (!string.IsNullOrWhiteSpace(VSGlobals.VSCommandParam))
+                if (!string.IsNullOrWhiteSpace(commandParam))
                 {
-                    command = "\"" + VSGlobals.VSCommand + " " + VSGlobals.VSCommandParam + "\"";
+                    command = "\"" + command + " " + commandParam + "\"";
                 }
                 else
                 {
@@ -147,9 +157,10 @@ namespace Proggen
 
             if (!string.IsNullOrWhiteSpace(VSGlobals.VSCommandParam))
             {
-                command = "\"" + command + " " + VSGlobals.VSCommandParam + "\"";
+                command = command + "";
+                // command = "\"" + command + " " + VSGlobals.VSCommandParam + "\"";
             }
-            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + command;
+            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + " " + command;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
             process.WaitForInputIdle();
