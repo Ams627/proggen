@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <RequiredExtensions>
+    <Generator Name="pg17">
+      <Extension Guid="3c6063ca-5f33-4889-aaae-387e9d5a0368" Command="OpenStartFile" CommandParameter="$$()" Replace="//StartTypingHere" />
+    </Generator>
+    <Generator Name="wpf17">
+      <Extension Guid="3c6063ca-5f33-4889-aaae-387e9d5a0368" Command="OpenStartFile" CommandParameter="$$()" Replace="//StartTypingHere" />
+    </Generator>
+  </RequiredExtensions>  
+</Settings>
