@@ -38,11 +38,78 @@ namespace Proggen.Generators.Common
                     "",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",
-                    "    /// <summary>",
-                    "    /// Interaction logic for App.xaml",
-                    "    /// </summary>",
                     "    public partial class App : Application",
                     "    {",
+                    "    }",
+                    "}"
+                }
+            },
+
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/ViewModel.cs",
+                Contents = new [] {
+                    "using System;",
+                    "using System.Windows;",
+                    "using System.Collections.Generic;",
+                    "using System.Linq;",
+                    "",
+                    "namespace $$(PROJECTNAMECAMEL)",
+                    "{",
+                    "    public class ViewModel",
+                    "    {",
+                    "        public Thickness MyMargin { get; set; } = new Thickness(50, 50, 50, 50);",
+                    "    }",
+                    "}"
+                }
+            },
+
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/Converters/ConverterBase.cs",
+                Contents = new [] {
+                    "using System;",
+                    "using System.Windows.Markup;",
+                    "using System.Collections.Generic;",
+                    "using System.Linq;",
+                    "",
+                    "namespace $$(PROJECTNAMECAMEL)",
+                    "{",
+                    "    public class ConverterBase : MarkupExtension",
+                    "    {",
+                    "        public override object ProvideValue(IServiceProvider serviceProvider)",
+                    "        {",
+                    "            return this;",
+                    "        }",
+                    "    }",
+                    "}"
+                }
+            },
+
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/Converters/MyValueConverter.cs",
+                Contents = new [] {
+                    "using System;",
+                    "using System.Windows;",
+                    "using System.Windows.Data;",
+                    "using System.Globalization;",
+                    "using System.Collections.Generic;",
+                    "using System.Linq;",
+                    "",
+                    "namespace $$(PROJECTNAMECAMEL)",
+                    "{",
+                    "    public class MyValueConverter : ConverterBase, IValueConverter",
+                    "    {",
+                    "        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)",
+                    "        {",
+                    "            if (value is Thickness thickness)",
+                    "            {",
+                    "                System.Diagnostics.Debug.WriteLine($\"Thickness : {thickness.Left},{thickness.Top},{thickness.Right},{thickness.Bottom}\");",
+                    "            }",
+                    "            return value;",
+                    "        }\n",
+                    "        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)",
+                    "        {",
+                    "            throw new NotImplementedException();",
+                    "        }",
                     "    }",
                     "}"
                 }
@@ -73,8 +140,11 @@ namespace Proggen.Generators.Common
                     "        xmlns:local=\"clr-namespace:$$(PROJECTNAMECAMEL)\"",
                     "        mc:Ignorable=\"d\"",
                     "        Title=\"MainWindow\" Height=\"350\" Width=\"525\">",
+                    "<Window.DataContext>",
+                    "    <local:ViewModel/>",
+                    "</Window.DataContext>",
                     "    <Grid>",
-                    "        ",
+                    "        <TextBlock Text=\"Hello, World!\" FontSize=\"20\" Margin=\"{Binding MyMargin, Converter={local:MyValueConverter}}\"/>",
                     "    </Grid>",
                     "</Window>"
                 }
@@ -510,6 +580,15 @@ namespace Proggen.Generators.Common
                     "    </Compile>",
                     "  </ItemGroup>",
                     "  <ItemGroup>",
+                    "    <Compile Include=\"ViewModel.cs\">",
+                    "      <SubType>Code</SubType>",
+                    "    </Compile>",
+                    "    <Compile Include=\"Converters\\MyValueConverter.cs\">",
+                    "      <SubType>Code</SubType>",
+                    "    </Compile>",
+                    "    <Compile Include=\"Converters\\ConverterBase.cs\">",
+                    "      <SubType>Code</SubType>",
+                    "    </Compile>",
                     "    <Compile Include=\"Properties\\AssemblyInfo.cs\">",
                     "      <SubType>Code</SubType>",
                     "    </Compile>",

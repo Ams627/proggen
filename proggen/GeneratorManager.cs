@@ -13,6 +13,7 @@ namespace Proggen
 {
     class GeneratorManager
     {
+        private const string InstanceEnvVar = "VSDefaultInstanceID";
         private static HashSet<string> _generatorNames;
         public static List<string> HelpTexts { get; private set;}
         static GeneratorManager()
@@ -117,16 +118,32 @@ namespace Proggen
             {
                 var vsConfig = new VS2017Info.Vs2017SetupConfig();
                 var instances = vsConfig.VSInstances;
+                var instanceToStart = instances[0];
                 if (instances.Count > 1)
                 {
-                    var message = "Cannot start visual studio as I do not know which installed instance to use - it could be: \n";
-                    foreach (var instance in instances)
+                    var defaultInstanceId = Environment.GetEnvironmentVariable("VSDefaultInstanceID");
+                    if (!string.IsNullOrWhiteSpace(defaultInstanceId))
                     {
-                        message += Path.Combine(instance.InstalledPath, instance.ProductPath) + "\n";
+                        foreach(var instance in instances)
+                        {
+                            if (instance.Id == defaultInstanceId)
+                            {
+                                instanceToStart = instance;
+                            }
+                        }
                     }
-                    throw new Exception(message);
+                    else
+                    {
+                        var message = "Cannot start visual studio as I do not know which installed instance to use - it could be: \n";
+                        foreach (var instance in instances)
+                        {
+                            message += Path.Combine(instance.InstalledPath, instance.ProductPath) + "\n";
+                        }
+                        message += $"Set the environment variable {InstanceEnvVar} to the instance ID you want to use to resolve this.";
+                        throw new Exception(message);
+                    }
                 }
-                vsExecutableName = Path.Combine(instances[0].InstalledPath, instances[0].ProductPath);
+                vsExecutableName = Path.Combine(instanceToStart.InstalledPath, instanceToStart.ProductPath);
 
                 // find out if AMSExtensions present:
                 var extensions = VS2017Info.VS2017AppData.GetInstalledExtensions(instances[0].Version, instances[0].Id);
