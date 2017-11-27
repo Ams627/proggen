@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 using Proggen.Generators.Common;
 using System.Xml.Linq;
 using System.Reflection;
+using proggen;
 
 namespace Proggen
 {
     class Program
     {
         private static string progname;
-        private static object path;
 
-        private static void DoGenerate(string projectname, string generator="")
+        private static void DoGenerate(string projectname, string generator = "")
         {
             if (File.Exists(projectname) || Directory.Exists(projectname))
             {
@@ -35,6 +35,7 @@ namespace Proggen
 
         static void Main(string[] args)
         {
+            Settings.Go();
             VSGlobals.ProjectGUID = Guid.NewGuid();
             var s = VSGlobals.ExpandMacros("$$(PROJECTGUID)");
 
@@ -43,7 +44,7 @@ namespace Proggen
             try
             {
                 var arglist = args.ToList();
-                
+
                 if (args.Count() == 0)
                 {
                     Console.WriteLine($"{progname} - make various types of Visual Studio solution and start Visual Studio.\n");
@@ -81,8 +82,6 @@ namespace Proggen
                     }
                     Environment.Exit(0);
                 }
-
-                ReadGeneratorSettings();
 
                 var generatorName = "";
                 // is the program name a generator name?
@@ -142,7 +141,7 @@ namespace Proggen
 
                 foreach (var project in arglist)
                 {
-                    if (project[0] ==  '-')
+                    if (project[0] == '-')
                     {
                         Console.Error.WriteLine($"{progname}: option {project} ignored.");
                     }
@@ -156,52 +155,6 @@ namespace Proggen
             {
                 Console.Error.WriteLine(progname + ": Error: " + ex.Message);
             }
-        }
-
-        private static void ReadGeneratorSettings()
-        {
-            var assembly = typeof(Program).Assembly;
-            var companyAttribute = AssemblyCompanyAttribute.GetCustomAttribute(assembly, typeof(AssemblyCompanyAttribute)) as AssemblyCompanyAttribute;
-            var productAttribute = AssemblyProductAttribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute)) as AssemblyProductAttribute;
-            var companyName = companyAttribute?.Company;
-            var productName = productAttribute?.Product;
-            var specialPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-            if (!string.IsNullOrWhiteSpace(companyName) && !string.IsNullOrWhiteSpace(productName) && !string.IsNullOrWhiteSpace(specialPath))
-            {
-                var folder = Path.Combine(specialPath, companyName, productName);
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
-                }
-                var filename = Path.Combine(folder, "settings.xml");
-                var doc = XDocument.Load(filename);
-
-                var requiredExtensions = doc.Element("Settings").Elements("RequiredExtensions");
-                var generatorExtensionDictionary = requiredExtensions.Elements("Generator").ToDictionary(
-                    x => x.Attribute("Name").Value,
-                    x => new
-                    {
-                        Guid = x.Element("Extension").Attribute("Guid").Value,
-                        Command = x.Element("Extension").Attribute("Command").Value,
-                        CommandParameter = x.Element("Extension").Attribute("CommandParameter").Value,
-                        Replace = x.Element("Extension").Attribute("Replace").Value
-                    }
-            );
-
-
-                foreach (var p in generatorExtensionDictionary)
-                {
-                    var generatorName = p.Key;
-                    var guid = p.Value.Guid;
-                    Console.WriteLine($"key:{generatorName} guid:{guid}");
-                }
-
-            }
-
-
-            //var docPath = 
-            //XDocument xd = XDocument
         }
     }
 }

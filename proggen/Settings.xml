@@ -2,10 +2,10 @@
 <Settings>
   <RequiredExtensions>
     <Generator Name="pg17">
-      <Extension Guid="3c6063ca-5f33-4889-aaae-387e9d5a0368" Command="OpenStartFile" CommandParameter="$$()" Replace="//StartTypingHere" />
+      <Extension Guid="3c6063ca-5f33-4889-aaae-387e9d5a0368" Command="OpenStartFile" Param1="$$()" Param2="//StartTypingHere" />
     </Generator>
     <Generator Name="wpf17">
-      <Extension Guid="3c6063ca-5f33-4889-aaae-387e9d5a0368" Command="OpenStartFile" CommandParameter="$$()" Replace="//StartTypingHere" />
+      <Extension Guid="49403877-67AC-4A98-B20B-24EA2B43EBE8" Command="OpenStartFile" Param1="$$()" Param2="//StartTypingHere" />
     </Generator>
   </RequiredExtensions>  
 </Settings>
