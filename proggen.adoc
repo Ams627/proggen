@@ -1,0 +1,21 @@
+= Program Generator: A solution generator for Visual Studio 15, 17 and 19
+
+== Types of solution generated
+
+The program generator is supplied as a single executable: `proggen.exe`. However, when 
+this program is copied to an executable whose name matches one of the names below, the
+executable generates one of the following types of solution.
+
+* *cpp15.exe* Generate a minimal C++ console application for Visual Studio 2015.
+* *cpp17.exe* Generate a minimal C++ console application for Visual Studio 2017.
+* *cs15.exe* Generate a C Sharp console application for Visual Studio 2015.
+* *cs17.exe* Generate a C Sharp console application for Visual Studio 2017.
+* *pg15.exe* Same as cpp15.exe.
+* *pg17.exe* Same as cpp17.exe.
+* *pgwpf.exe* Generate a very simple WPF solution for Visual Studio 2017.
+* *proggen.exe* Generic solution generator. Generates any of the solutions specified here.
+* *quickie* Generate a simple c# solution with just a `static class Program` and `Main`. No namespace and no `try`..`catch` block.
+* *WebAPI17.exe* Generate a .net core web api solution.
+* *wpf15.exe* Generate a very simple WPF solution for Visual Studio 2015.
+* *wpf17.exe* Generate a very simple WPF solution for Visual Studio 2017.
+* *wpf19.exe* Generate a very simple WPF solution for Visual Studio 2019.
