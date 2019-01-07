@@ -1,4 +1,23 @@
-﻿// Visual studio program generator
+﻿// Copyright (c) Adrian Sims 2018
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +34,21 @@ namespace Proggen
     class Program
     {
         private static string progname;
+
+        private static void PrintProgramVersion()
+        {
+            var asm = System.Reflection.Assembly.GetEntryAssembly();
+            var version = asm.GetName().Version;
+            var buildDate = BuildStats.GetBuildDate(asm);
+            var now = DateTime.Now;
+
+            Console.WriteLine($"{progname} a Visual Studio solution generator for Visual Studio 2015/7/9.");
+            Console.WriteLine($"{progname} version {version}");
+            Console.WriteLine($"{progname} location: {asm.Location}");
+            Console.WriteLine($"{progname} build date: {buildDate:yyyy-MMM-dd} at {buildDate:HH:mm:ss}");
+            Console.WriteLine($"Current date/time: {now:yyyy-MMM-dd HH:mm:ss}");
+        }
+
 
         private static void DoGenerate(string projectname, string generator = "")
         {
@@ -39,7 +73,7 @@ namespace Proggen
             VSGlobals.ProjectGUID = Guid.NewGuid();
             var s = VSGlobals.ExpandMacros("$$(PROJECTGUID)");
 
-            var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+            var codeBase = System.Reflection.Assembly.GetEntryAssembly().CodeBase;
             progname = Path.GetFileNameWithoutExtension(codeBase);
             try
             {
@@ -59,7 +93,7 @@ namespace Proggen
                     Console.WriteLine($"\nSpecifying {progname} -makeg with no other parameters causes proggen to\ncopy itself to each of the solution-types specified above (with\na .exe extension)");
                     Environment.Exit(0);
                 }
-                else if (args[0] == "-makeg")
+                else if (args[0] == "-makeg" || args[0] == "--makeg")
                 {
                     if (args.Count() > 1)
                     {
@@ -72,7 +106,7 @@ namespace Proggen
                 {
                     if (args.Count() > 1)
                     {
-                        throw new Exception("-vsversions option does not take parameters");
+                        throw new Exception("-instances does not take parameters.");
                     }
                     var vs2017Info = new VS2017Info.Vs2017SetupConfig();
                     var instances = vs2017Info.VSInstances;
@@ -80,6 +114,11 @@ namespace Proggen
                     {
                         Console.WriteLine($"ID: {instance.Id} Path: {Path.Combine(instance.InstalledPath, instance.ProductPath)}");
                     }
+                    Environment.Exit(0);
+                }
+                else if (args[0] == "-version" || args[0] == "--version")
+                {
+                    PrintProgramVersion();
                     Environment.Exit(0);
                 }
 
@@ -94,7 +133,6 @@ namespace Proggen
                         {
                             throw new Exception("You must specify the name of a project to create.");
                         }
-                        VSGlobals.DoGit = true;
                         Utility.Shift(ref arglist);
                     }
                 }
@@ -114,7 +152,6 @@ namespace Proggen
                         {
                             throw new Exception($"'{option}' is an invalid option");
                         }
-                        VSGlobals.DoGit = true;
                         Utility.Shift(ref arglist);
                     }
 
@@ -134,7 +171,6 @@ namespace Proggen
                         {
                             throw new Exception($"'{option}' is an invalid option");
                         }
-                        VSGlobals.DoGit = true;
                         Utility.Shift(ref arglist);
                     }
                 }
@@ -153,8 +189,9 @@ namespace Proggen
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(progname + ": Error: " + ex.Message);
+                Console.Error.WriteLine($"{progname}: error: {ex}");
             }
         }
+
     }
 }

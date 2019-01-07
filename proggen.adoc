@@ -2,7 +2,7 @@
 
 == Types of solution generated
 
-The program generator is supplied as a single executable: `proggen.exe`. However, when 
+The program generator is supplied as a single executable: `proggen.exe`. However, when
 this program is copied to an executable whose name matches one of the names below, the
 executable generates one of the following types of solution.
 
@@ -19,3 +19,11 @@ executable generates one of the following types of solution.
 * *wpf15.exe* Generate a very simple WPF solution for Visual Studio 2015.
 * *wpf17.exe* Generate a very simple WPF solution for Visual Studio 2017.
 * *wpf19.exe* Generate a very simple WPF solution for Visual Studio 2019.
+
+== Command line switches
+
+Command line switches start with a dash and not a forward slash. Current switches are:
+
+* *-makeg* build all the known generators - we simply copy proggen.exe to a number of different executable files. (Proggen detects
+which generator to run by looking at its own name).
+* *--version* Print out the version and the build date.

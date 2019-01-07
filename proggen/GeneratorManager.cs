@@ -19,7 +19,7 @@ namespace Proggen
         static GeneratorManager()
         {
             HelpTexts = new List<string>();
-            var currAssembly = Assembly.GetExecutingAssembly();
+            var currAssembly = Assembly.GetEntryAssembly();
             _generatorNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var type in currAssembly.GetTypes())
@@ -50,7 +50,7 @@ namespace Proggen
 
         public static void MakeAllGenerators()
         {
-            var fullpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var fullpath = System.Reflection.Assembly.GetEntryAssembly().Location;
             var dir = Path.GetDirectoryName(fullpath);
             foreach (var g in Generators)
             {
@@ -147,11 +147,14 @@ namespace Proggen
 
                 // find out if AMSExtensions present:
                 var extensions = VS2017Info.VS2017AppData.GetInstalledExtensions(instances[0].Version, instances[0].Id);
-                var amsExtPresent = extensions.Any(x => !string.IsNullOrWhiteSpace(x.Key) && x.Key.Split(',')[0] == "3c6063ca-5f33-4889-aaae-387e9d5a0368");
-                if (amsExtPresent)
+                if (extensions != null)
                 {
-                    Console.WriteLine("AMS extensions found");
-                    commandParam = VSGlobals.VSCommandParam;
+                    var amsExtPresent = extensions.Any(x => !string.IsNullOrWhiteSpace(x.Key) && x.Key.Split(',')[0] == "3c6063ca-5f33-4889-aaae-387e9d5a0368");
+                    if (amsExtPresent)
+                    {
+                        Console.WriteLine("AMS extensions found");
+                        commandParam = VSGlobals.VSCommandParam;
+                    }
                 }
             }
 
