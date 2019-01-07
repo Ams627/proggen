@@ -21,6 +21,5 @@ namespace Proggen.Generators.Common
         [Macro("SOLUTIONCONFIGNOSPACE")] public static string SolutionConfigNoSpace => SolutionConfig.Replace(" ", "");
         [Macro("GENERATEDDATE")] public static DateTime GeneratedDate { get; set; }
         [Macro("SUFFIX")] public static string ProjectSuffix { get; set; }
-        public static bool DoGit { get; set; } = false;
     }
 }

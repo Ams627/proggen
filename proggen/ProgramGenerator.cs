@@ -1,5 +1,4 @@
-﻿// wonk
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,20 +60,10 @@ namespace Proggen
                 }
             }
 
-            var gitCmdScript = "gitmehappy.cmd";
-            var cmdscriptLines = new List<string>() {
-                "rem echo off",
-                $"git init",
-            };
-
             foreach (var filespec in FileSpecs)
             {
                 var relativePathname = VSGlobals.ExpandMacros(filespec.Pathname);
                 var fullPathname = Path.Combine(VSGlobals.ProjectName, relativePathname);
-                if (filespec.GitAdd)
-                {
-                    cmdscriptLines.Add($"git add {relativePathname}");
-                }
                 using (var file = new System.IO.StreamWriter(fullPathname))
                 {
                     foreach (var line in filespec.Contents)
@@ -83,27 +72,6 @@ namespace Proggen
                         file.WriteLine(outputline.Replace("\n", "\r\n"));
                     }
                 }
-            }
-
-            File.WriteAllLines(Path.Combine(VSGlobals.ProjectName, gitCmdScript), cmdscriptLines);
-
-            // only initialise a git repo if we have the -g option:
-            if (VSGlobals.DoGit)
-            {
-                Process process = new Process();
-                process.StartInfo.FileName = "cmd";
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.Arguments = "/c" + Path.Combine(VSGlobals.ProjectName, gitCmdScript);
-
-                var dir = Directory.GetCurrentDirectory();
-                //process.StartInfo.WorkingDirectory = Path.Combine(dir, VSMacros.ProjectName);
-
-                process.Start();
-                process.WaitForExit();
             }
         }
     }

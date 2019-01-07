@@ -43,10 +43,11 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="VS2017Info, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VS2017Info.1.0.4\lib\VS2017Info.dll</HintPath>
+      <HintPath>..\packages\VS2017Info.1.0.5\lib\VS2017Info.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildStats.cs" />
     <Compile Include="ExtensionCommand.cs" />
     <Compile Include="GeneratorManager.cs" />
     <Compile Include="Generators\Common\AutoRegisterAttribute.cs" />

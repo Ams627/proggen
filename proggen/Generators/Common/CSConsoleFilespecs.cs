@@ -10,7 +10,7 @@ namespace Proggen.Generators.Common
     {
         private static string sixteen = new string(' ', 16);
         private static string errorStuff =
-            sixteen + "var codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;\n" +
+            sixteen + "var codeBase = System.Reflection.Assembly.GetEntryAssembly().CodeBase;\n" +
             sixteen + "var progname = Path.GetFileNameWithoutExtension(codeBase);\n" +
             sixteen + "Console.Error.WriteLine(progname + \": Error: \" + ex.Message);";
 
