@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>VS2017Info</id>
+    <version>1.0.5</version>
+    <title>VS2017Info</title>
+    <authors>Adrian Sims</authors>
+    <owners>Adrian Sims</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Library for dealing with VS2017 installed instances and installed extensions therein</description>
+    <releaseNotes>Updated for the case where extension info for the installed instance of VS2017 cannot be found!</releaseNotes>
+    <copyright>Copyright 2017 Adrian Sims</copyright>
+  </metadata>
+</package>

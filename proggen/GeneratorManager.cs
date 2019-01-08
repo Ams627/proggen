@@ -114,14 +114,35 @@ namespace Proggen
                 vsExecutableName = (string)Registry.GetValue(regkey, "InstallDir", "");
                 vsExecutableName += "devenv.exe";
             }
-            else if (vsVersion == "2017")
+            else if (vsVersion == "2017" || vsVersion == "2019")
             {
+                // Both VS2017 and VS2019 have the same "private registry" mechanism for storing installed instances:
                 var vsConfig = new VS2017Info.Vs2017SetupConfig();
                 var instances = vsConfig.VSInstances;
                 var instanceToStart = instances[0];
-                if (instances.Count > 1)
+
+                // first get the numeric version number of the version of Visual Studio we wish to start. For VS2017, this is 15, for 
+                // VS2019 this is 16.
+                var ver = vsVersion == "2017" ? 15 : 16;
+
+                //Console.WriteLine($"Looking for numeric version ID {ver}");
+
+                // get instances of the specified version of Visual Studio:
+                var instancesForVersion = instances.Where(x =>
                 {
-                    var defaultInstanceId = Environment.GetEnvironmentVariable("VSDefaultInstanceID");
+                    var dotPos = x.Version.IndexOf(".");
+                    var numericVersion = Convert.ToInt32(x.Version.Substring(0, dotPos));
+                    return numericVersion == ver;
+                });
+
+
+                //instancesForVersion.ToList().ForEach(x => Console.WriteLine($"Found instance {x.Id} {x.InstalledPath}"));
+
+                if (instancesForVersion.Count() > 1)
+                {
+
+                    var defaultInstanceId = ver == 15 ? Environment.GetEnvironmentVariable("VSDefaultInstanceID") : Environment.GetEnvironmentVariable("VSDefaultInstanceID19");
+
                     if (!string.IsNullOrWhiteSpace(defaultInstanceId))
                     {
                         foreach(var instance in instances)

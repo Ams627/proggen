@@ -1,8 +1,11 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proggen", "proggen\proggen.csproj", "{453B2BE0-5862-4EFF-8E46-648EE7395C1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS2017Info", "VS2017Info\VS2017Info.csproj", "{DBD299CA-A3C3-43A9-AD8A-3E99D47FCAEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +17,15 @@ Global
 		{453B2BE0-5862-4EFF-8E46-648EE7395C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{453B2BE0-5862-4EFF-8E46-648EE7395C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{453B2BE0-5862-4EFF-8E46-648EE7395C1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBD299CA-A3C3-43A9-AD8A-3E99D47FCAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBD299CA-A3C3-43A9-AD8A-3E99D47FCAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBD299CA-A3C3-43A9-AD8A-3E99D47FCAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBD299CA-A3C3-43A9-AD8A-3E99D47FCAEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {955DFE7C-0FBB-431E-A01A-5B52914C4865}
+	EndGlobalSection
 EndGlobal
-
