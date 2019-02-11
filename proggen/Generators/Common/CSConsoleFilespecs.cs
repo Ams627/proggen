@@ -10,8 +10,8 @@ namespace Proggen.Generators.Common
     {
         private static string sixteen = new string(' ', 16);
         private static string errorStuff =
-            sixteen + "var codeBase = System.Reflection.Assembly.GetEntryAssembly().CodeBase;\n" +
-            sixteen + "var progname = Path.GetFileNameWithoutExtension(codeBase);\n" +
+            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\n" +
+            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\n" +
             sixteen + "Console.Error.WriteLine(progname + \": Error: \" + ex.Message);";
 
         public static FileSpec[] CSConsoleSpecs =
@@ -28,7 +28,7 @@ namespace Proggen.Generators.Common
                     "using System.Threading.Tasks;\n",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",
-                    "    internal class Program",
+                    "    class Program",
                     "    {",
                     "        private static void Main(string[] args)",
                     "        {",
@@ -45,7 +45,7 @@ namespace Proggen.Generators.Common
                     "<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
                     "<configuration>",
                     "    <startup> ",
-                    "        <supportedRuntime version=\"v4.0\" sku=\".NETFramework,Version=v4.5.2\" />",
+                    "        <supportedRuntime version=\"v4.0\" sku=\".NETFramework,Version=v4.7.2\" />",
                     "    </startup>",
                     "</configuration>"
                 }
@@ -96,7 +96,7 @@ namespace Proggen.Generators.Common
                 Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
                 Contents = new [] {
                     "\uFEFF" + // prepended BOM
-                    "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+                                        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
                     "<Project ToolsVersion=\"14.0\" DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">",
                     "  <Import Project=\"$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props\" Condition=\"Exists('$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props')\" />",
                     "  <PropertyGroup>",

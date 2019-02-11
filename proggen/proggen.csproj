@@ -54,6 +54,7 @@
     <Compile Include="Generators\Common\AutoRegisterAttribute.cs" />
     <Compile Include="Generators\Common\CommonFileSpecs.cs" />
     <Compile Include="Generators\Common\CSConsoleFilespecs.cs" />
+    <Compile Include="Generators\Common\CsCoreCFileSpecs.cs" />
     <Compile Include="Generators\Common\CsWpfFileSpecs.cs" />
     <Compile Include="Generators\Common\FileSpec.cs" />
     <Compile Include="Generators\Common\MacroAttribute.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Generators\Common\ProjectTypeGUIDs.cs" />
     <Compile Include="Generators\Common\VSMacros.cs" />
     <Compile Include="Generators\Common\WebAPIFileSpecs.cs" />
+    <Compile Include="Generators\Corec17\Corec17.cs" />
     <Compile Include="Generators\CPP15\CPP15.cs" />
     <Compile Include="Generators\Common\CPPFileSpecs.cs" />
     <Compile Include="Generators\CPP17\cpp17.cs" />
@@ -94,6 +96,7 @@
       <Name>VS2017Info</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>$(TargetPath) -makeg
