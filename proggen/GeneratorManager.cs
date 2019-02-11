@@ -87,6 +87,7 @@ namespace Proggen
         public static void StartVisualStudio(string vsVersion)
         {
             var vsExecutableName="";
+            var amsExtensions = false;
             var command = string.IsNullOrWhiteSpace(VSGlobals.VSCommand) ? "" : VSGlobals.VSCommand;
             var commandParam = "";
 
@@ -174,7 +175,7 @@ namespace Proggen
                     if (amsExtPresent)
                     {
                         Console.WriteLine("AMS extensions found");
-                        commandParam = VSGlobals.VSCommandParam;
+                        amsExtensions = true;
                     }
                 }
             }
@@ -201,7 +202,7 @@ namespace Proggen
                 command = command + "";
                 // command = "\"" + command + " " + VSGlobals.VSCommandParam + "\"";
             }
-            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + " " + command;
+            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + (amsExtensions ?  (" " + command) : "");
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
             process.WaitForInputIdle();

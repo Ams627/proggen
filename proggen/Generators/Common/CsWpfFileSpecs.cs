@@ -122,7 +122,7 @@ namespace Proggen.Generators.Common
                     "<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
                     "<configuration>",
                     "    <startup> ",
-                    "        <supportedRuntime version=\"v4.0\" sku=\".NETFramework,Version=v4.5.2\" />",
+                    "        <supportedRuntime version=\"v4.0\" sku=\".NETFramework,Version=v4.7.2\" />",
                     "    </startup>",
                     "</configuration>"
                 }
@@ -250,7 +250,7 @@ namespace Proggen.Generators.Common
                     "<?xml version=\"1.0\" encoding=\"utf-8\" ?>",
                     "<configuration>",
                     "    <startup>",
-                    "        <supportedRuntime version=\"v4.0\" sku=\".NETFramework,Version=v4.5.2\" />",
+                    "        <supportedRuntime version=\"v4.0\" sku=\".NETFramework,Version=v4.7.2\" />",
                     "    </startup>",
                     "</configuration>"
                 }
@@ -520,7 +520,7 @@ namespace Proggen.Generators.Common
                     "    <AppDesignerFolder>Properties</AppDesignerFolder>",
                     "    <RootNamespace>$$(PROJECTNAMECAMEL)</RootNamespace>",
                     "    <AssemblyName>$$(PROJECTNAMECAMEL)</AssemblyName>",
-                    "    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>",
+                    "    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>",
                     "    <FileAlignment>512</FileAlignment>",
                     "    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>",
                     "    <WarningLevel>4</WarningLevel>",
