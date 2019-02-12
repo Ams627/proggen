@@ -27,4 +27,14 @@ Here is an example of a generator class:
         public override FileSpec[] FileSpecs => CPPFileSpecs.CPPSpecs;
         public override List<string> Folders => null;
     }
-'''
+```
+
+The following generators are currently supported:
+* **cpp15** Generate a solution for Visual Studio 2015 containing a single C++ project.
+* **cpp17** Generate a solution for Visual Studio 2017 containing a single C++ project.
+* **wpf17** Generate a solution for Visual Studio 2017 containing a single WPF project.
+* **cs15** Generate a solution for Visual Studio 2015 containing a single C# console application project.
+* **cs17** Generate a solution for Visual Studio 2017 containing a single C# console application project.
+* **cs19** Generate a solution for Visual Studio 2019 containing a single C# console application project.
+* **corec17** Generate a solution for Visual Studio 2017 containing a single .Net Core console application project.
+* **webapi** Generate a solution for Visual Studio 2017 containing a single Asp.Net Core Web API application project.
