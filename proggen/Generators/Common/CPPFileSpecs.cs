@@ -79,7 +79,7 @@ namespace Proggen.Generators.Common
                 Contents = new[]
                 {
                     "\uFEFF" +  // prepended BOM
-                    "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+                    "<?xmld version=\"1.0\" encoding=\"utf-8\"?>",
                     "<Project DefaultTargets=\"Build\" ToolsVersion=\"14.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">",
                     "  <ItemGroup Label=\"ProjectConfigurations\">",
                     "    <ProjectConfiguration Include=\"Debug|Win32\">",
@@ -134,6 +134,7 @@ namespace Proggen.Generators.Common
                     "      <WarningLevel>Level3</WarningLevel>",
                     "      <Optimization>Disabled</Optimization>",
                     "      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>",
+                    "      <LanguageStandard>stdcpp17</LanguageStandard>",
                     "    </ClCompile>",
                     "    <Link>",
                     "      <SubSystem>Console</SubSystem>",
@@ -148,6 +149,7 @@ namespace Proggen.Generators.Common
                     "      <FunctionLevelLinking>true</FunctionLevelLinking>",
                     "      <IntrinsicFunctions>true</IntrinsicFunctions>",
                     "      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>",
+                    "      <LanguageStandard>stdcpp17</LanguageStandard>",
                     "    </ClCompile>",
                     "    <Link>",
                     "      <SubSystem>Console</SubSystem>",
@@ -200,6 +202,7 @@ namespace Proggen.Generators.Common
                     "#include <set>",
                     "#include <unordered_map>",
                     "#include <unordered_set>",
+                    "#include <locale>",
                     "#include <functional>",
                     "// basic exception handler class:",
                     "struct QException : public std::exception",
