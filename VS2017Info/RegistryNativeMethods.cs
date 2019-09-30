@@ -30,14 +30,13 @@ namespace VS2017Info
     [DllImport("advapi32.dll", SetLastError = true)]
     private static extern int RegLoadAppKey(String hiveFile, out int hKey, RegSAM samDesired, int options, int reserved);
 
-    public static int RegLoadAppKey(String hiveFile)
+    public static int RegLoadAppKey(string hiveFile)
     {
-        int hKey;
-        int rc = RegLoadAppKey(hiveFile, out hKey, RegSAM.KEY_ENUMERATE_SUB_KEYS | RegSAM.KEY_QUERY_VALUE | RegSAM.KEY_READ, 0, 0);
+        int rc = RegLoadAppKey(hiveFile, out var hKey, RegSAM.KEY_ENUMERATE_SUB_KEYS | RegSAM.KEY_QUERY_VALUE | RegSAM.KEY_READ, 0, 0);
 
         if (rc != 0)
         {
-            throw new Win32Exception(rc, "Failed during RegLoadAppKey of file " + hiveFile);
+            throw new Win32Exception(rc, $"Failed during RegLoadAppKey of file {hiveFile} - error code was {rc}");
         }
 
         return hKey;

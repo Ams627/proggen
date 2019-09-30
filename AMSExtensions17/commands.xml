@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+  <Commands package="guidAMSExPkg">
+    <Buttons>
+      
+      <!-- the close crap command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidCloseCrap" priority="0x0100">
+        <Strings>
+          <CommandName>cmdidCloseCrap</CommandName>
+          <CanonicalName>CloseCrap</CanonicalName>
+          <LocCanonicalName>CloseCrap</LocCanonicalName>
+          <ButtonText>CloseCrap</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- the OpenConApp command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidOpenConApp" priority="0x0100">
+        <Strings>
+          <CommandName>cmdidOpenConApp</CommandName>
+          <CanonicalName>OpenConApp</CanonicalName>
+          <LocCanonicalName>OpenConApp</LocCanonicalName>
+          <ButtonText>OpenConApp</ButtonText>
+        </Strings>
+      </Button>
+
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidAMSExPkg" value="{1a658db0-4d9b-43b2-a203-9eaeb8c1e9be}" /> <!-- guid of whole package -->
+    <GuidSymbol name="guidAMSExCmdSet" value="{134ac9ce-0c52-4dd2-aadd-2da9ff5430f6}"> <!-- guid of command set --> 
+      <IDSymbol name="cmdidCloseCrap" value="0x0100" />
+      <IDSymbol name="cmdidOpenConApp" value="0x0101" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

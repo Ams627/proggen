@@ -1,18 +1,19 @@
-# proggen
-## Solution generator for Visual Studio
-This is a command line solution generator and used as an alternative to the new project wizard. It
-sets up a new solution containing one new project. It then opens visual studio and builds the project - that's where its job ends.
-A single command can generate many projects (and for each project open an instance of Visual Studio) **as long as they are all of the same type.**
+= proggen : a solution generator for Visual Studio 2015/2017/2019
 
+This program generates solutions containing skeleton projects for Visual Studio and is 
+used as an alternative to the new project wizard. It sets up a new solution containing one new project.
+It then opens visual studio and builds the project - that's where its job ends.
+A single command can generate many projects (and for each project open an instance
+of Visual Studio) **as long as they are all of the same type.**
 
 
 A new generator class (i.e. one that implements the IGenerator interface) is added for each type of project. For example,
-there is one for a c++ console application project, one for a c# wpf project, one for a .net core project. The
+there a generator for a C++ console application project, one for a C# WPF project, one for a .Net core project. The
 GeneratorManager class uses reflection to register all such generators. Adding another generator is simply
 a matter of defining a class that implements the IGenerator interface - that's all that is required.
 
 Here is an example of a generator class:
-```
+----
     [AutoRegister]
     class CPP15 : ProgramGenerator
     {
@@ -27,7 +28,7 @@ Here is an example of a generator class:
         public override FileSpec[] FileSpecs => CPPFileSpecs.CPPSpecs;
         public override List<string> Folders => null;
     }
-```
+----
 
 The following generators are currently supported:
 * **cpp15** Generate a solution for Visual Studio 2015 containing a single C++ project.
@@ -38,3 +39,15 @@ The following generators are currently supported:
 * **cs19** Generate a solution for Visual Studio 2019 containing a single C# console application project.
 * **corec17** Generate a solution for Visual Studio 2017 containing a single .Net Core console application project.
 * **webapi** Generate a solution for Visual Studio 2017 containing a single Asp.Net Core Web API application project.
+
+
+== Choosing a version of Visual Studio
+
+The `VSVersion` property of the ProgramGenerator interface controls which version of Visual Studio is opened.
+
+For Visual Studio 2017 or later, there can be more than one instance or "workflow" installed. For example, there may be
+an instance of Visual Studio installed for C++ development and a different one for C# development.
+
+Installations of Visual Studio 2017 register themselves on installation and are enumerable via a COM interface. In C# we can
+use the namespace `Microsoft.VisualStudio.Setup.Configuration` and  
+

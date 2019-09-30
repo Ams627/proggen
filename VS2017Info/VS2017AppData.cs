@@ -66,12 +66,24 @@ namespace VS2017Info
             var result = new List<KeyValuePair<string, string>>();
 
             var keypath = $@"Software\Microsoft\VisualStudio\{GetVersionForRegistryKey(version, instance)}\ExtensionManager\EnabledExtensions";
+
+            // check the private hive exists and open it:
             var hivefile = VS2017Info.VS2017AppData.GetPrivateRegFilename(version, instance);
+            if (!File.Exists(hivefile))
+            {
+                throw new VsInfoException($"{hivefile} does not exist.");
+            }
             var hKey = RegistryNativeMethods.RegLoadAppKey(hivefile);
+
             using (var safeRegistryHandle = new SafeRegistryHandle(new IntPtr(hKey), true))
             using (var appKey = RegistryKey.FromHandle(safeRegistryHandle))
             using (var extensionsKey = appKey.OpenSubKey(keypath, true))
             {
+                if (extensionsKey == null)
+                {
+                    throw new VsInfoException($"the key {keypath} does not exist in {hivefile}");
+                }
+
                 // get a list of key-value pairs - use the value names to get the values
                 result = extensionsKey == null ? result :
                     extensionsKey.GetValueNames().Select(x => new KeyValuePair<string, string>(x, extensionsKey.GetValue(x).ToString())).ToList();

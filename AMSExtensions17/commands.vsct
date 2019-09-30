@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+  <Commands package="guidAMSExPkg">
+    <Buttons>
+      
+      <!-- the close crap command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidCloseCrap" priority="0x0100">
+        <Strings>
+          <CommandName>cmdidCloseCrap</CommandName>
+          <CanonicalName>CloseCrap</CanonicalName>
+          <LocCanonicalName>CloseCrap</LocCanonicalName>
+          <ButtonText>CloseCrapX</ButtonText> <!-- can be anything but don't make the same as the canonical name-->
+        </Strings>
+      </Button>
+
+      <!-- the OpenConApp command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidOpenConApp" priority="0x0100">
+        <Strings>
+          <CommandName>cmdidOpenConApp</CommandName>
+          <CanonicalName>OpenConApp</CanonicalName>
+          <LocCanonicalName>OpenConApp</LocCanonicalName>
+          <ButtonText>OpenConAppX</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- the OpenCSharpConApp command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidOpenCSharpConApp" priority="0x0100">
+        <Strings>
+          <CommandName>cmdidOpenCSharpConApp</CommandName>
+          <CanonicalName>OpenCSharpConApp</CanonicalName>
+          <LocCanonicalName>OpenCSharpConApp</LocCanonicalName>
+          <ButtonText>OpenCSharpConAppX</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- the OpenWPFConApp command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidOpenWPFApp" priority="0x0100">
+        <Strings>
+          <CommandName>cmdidOpenWPFApp</CommandName>
+          <CanonicalName>OpenWPFApp</CanonicalName>
+          <LocCanonicalName>OpenWPFApp</LocCanonicalName>
+          <ButtonText>OpenWPFAppX</ButtonText>
+        </Strings>
+      </Button>
+
+
+      <!-- the OpenStartFile command -->
+      <Button guid="guidAMSExCmdSet" id="cmdidOpenStartFile" priority="0x0100" type="Button">
+        <CommandFlag>AllowParams</CommandFlag>
+        <CommandFlag>CommandWellOnly</CommandFlag>
+        <Strings>
+          <CommandName>cmdidOpenStartFile</CommandName>
+          <CanonicalName>OpenStartFile</CanonicalName>
+          <LocCanonicalName>OpenStartFile</LocCanonicalName>
+          <ButtonText>OpenStartFileX</ButtonText>
+        </Strings>
+      </Button>
+
+
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidAMSExPkg" value="{3c6063ca-5f33-4889-aaae-387e9d5a0368}" /> <!-- guid of whole package -->
+    <GuidSymbol name="guidAMSExCmdSet" value="{39c54ce6-2aa2-49b9-a912-00a4eee74ede}"> <!-- guid of command set --> 
+      <IDSymbol name="cmdidCloseCrap" value="0x0100" />
+      <IDSymbol name="cmdidOpenConApp" value="0x0101" />
+      <IDSymbol name="cmdidOpenCSharpConApp" value="0x0102" />
+      <IDSymbol name="cmdidOpenWPFApp" value="0x0103" />
+      <IDSymbol name="cmdidOpenStartFile" value="0x0104" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

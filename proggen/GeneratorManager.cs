@@ -76,7 +76,7 @@ namespace Proggen
             if (Generators.TryGetValue(progname, out generator))
             {
                 generator.Generate();
-                StartVisualStudio(generator.VSVersion);
+                StartVisualStudio(generator.VSVersion, generator.Command, generator.CommandParam);
             }
             else
             {
@@ -84,12 +84,10 @@ namespace Proggen
             }
         }
 
-        public static void StartVisualStudio(string vsVersion)
+        public static void StartVisualStudio(string vsVersion, string command, string commandParam)
         {
             var vsExecutableName="";
             var amsExtensions = false;
-            var command = string.IsNullOrWhiteSpace(VSGlobals.VSCommand) ? "" : VSGlobals.VSCommand;
-            var commandParam = "";
 
             if (vsVersion == "2010")
             {
@@ -120,7 +118,6 @@ namespace Proggen
                 // Both VS2017 and VS2019 have the same "private registry" mechanism for storing installed instances:
                 var vsConfig = new VS2017Info.Vs2017SetupConfig();
                 var instances = vsConfig.VSInstances;
-                var instanceToStart = instances[0];
 
                 // first get the numeric version number of the version of Visual Studio we wish to start. For VS2017, this is 15, for 
                 // VS2019 this is 16.
@@ -134,10 +131,11 @@ namespace Proggen
                     var dotPos = x.Version.IndexOf(".");
                     var numericVersion = Convert.ToInt32(x.Version.Substring(0, dotPos));
                     return numericVersion == ver;
-                });
+                }).Where(y=>y.ProductPath.EndsWith("devenv.exe"));
 
+                var instanceToStart = instancesForVersion.First();
 
-                //instancesForVersion.ToList().ForEach(x => Console.WriteLine($"Found instance {x.Id} {x.InstalledPath}"));
+                instancesForVersion.ToList().ForEach(x => Console.WriteLine($"Found instance {x.Id} {x.InstalledPath}"));
 
                 if (instancesForVersion.Count() > 1)
                 {
@@ -146,7 +144,7 @@ namespace Proggen
 
                     if (!string.IsNullOrWhiteSpace(defaultInstanceId))
                     {
-                        foreach(var instance in instances)
+                        foreach(var instance in instancesForVersion)
                         {
                             if (instance.Id == defaultInstanceId)
                             {
@@ -168,15 +166,23 @@ namespace Proggen
                 vsExecutableName = Path.Combine(instanceToStart.InstalledPath, instanceToStart.ProductPath);
 
                 // find out if AMSExtensions present:
-                var extensions = VS2017Info.VS2017AppData.GetInstalledExtensions(instances[0].Version, instances[0].Id);
-                if (extensions != null)
+
+                try
                 {
-                    var amsExtPresent = extensions.Any(x => !string.IsNullOrWhiteSpace(x.Key) && x.Key.Split(',')[0] == "3c6063ca-5f33-4889-aaae-387e9d5a0368");
-                    if (amsExtPresent)
+                    var extensions = VS2017Info.VS2017AppData.GetInstalledExtensions(instanceToStart.Version, instanceToStart.Id);
+                    if (extensions != null)
                     {
-                        Console.WriteLine("AMS extensions found");
-                        amsExtensions = true;
+                        var amsExtPresent = extensions.Any(x => !string.IsNullOrWhiteSpace(x.Key) && x.Key.Split(',')[0] == "3c6063ca-5f33-4889-aaae-387e9d5a0368");
+                        if (amsExtPresent)
+                        {
+                            Console.WriteLine("AMS extensions found");
+                            amsExtensions = true;
+                        }
                     }
+                }
+                catch (VS2017Info.VsInfoException ex)
+                {
+                    Console.WriteLine($"INFO: {ex.Message}");
                 }
             }
 
