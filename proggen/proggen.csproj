@@ -66,6 +66,7 @@
     <Compile Include="Generators\CPP15\CPP15.cs" />
     <Compile Include="Generators\Common\CPPFileSpecs.cs" />
     <Compile Include="Generators\CPP17\cpp17.cs" />
+    <Compile Include="Generators\CPP19\cpp19.cs" />
     <Compile Include="Generators\CS15\cs15.cs" />
     <Compile Include="Generators\CS17\cs17.cs" />
     <Compile Include="Generators\CS17\CS19.cs" />

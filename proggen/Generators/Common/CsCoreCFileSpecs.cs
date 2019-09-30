@@ -33,7 +33,7 @@ namespace Proggen.Generators.Common
                     "    {",
                     "        private static void Main(string[] args)",
                     "        {",
-                    $"            try\n            {{\n    //startstarttypingtypingherehere\n            }}\n            catch (Exception ex)\n            {{\n{errorStuff}\n            }}\n",
+                    $"            try\n            {{\n                //startstarttypingtypingherehere\n            }}\n            catch (Exception ex)\n            {{\n{errorStuff}\n            }}\n",
                     "        }",
                     "    }",
                     "}"

@@ -1,0 +1,43 @@
+= proggen : a solution generator for Visual Studio 2015/2017/2019
+
+This program generates solutions containing skeleton projects for Visual Studio and is 
+used as an alternative to the new project wizard. It sets up a new solution containing one new project.
+It then opens visual studio and builds the project - that's where its job ends.
+A single command can generate many projects (and for each project open an instance
+of Visual Studio) **as long as they are all of the same type.**
+
+
+A new generator class (i.e. one that implements the IGenerator interface) is added for each type of project. For example,
+there a generator for a C++ console application project, one for a C# WPF project, one for a .Net core project. The
+GeneratorManager class uses reflection to register all such generators. Adding another generator is simply
+a matter of defining a class that implements the IGenerator interface - that's all that is required.
+
+Here is an example of a generator class:
+----
+    [AutoRegister]
+    class CPP15 : ProgramGenerator
+    {
+        public override string Name => "cpp15|pg15";
+        public override string Description => "Generate a C++ Win32 console app for VS 2015 - windows.h included.";
+        public override string VSVersion => "2015";
+        public override string PlatformToolset => "v140";
+        public override Guid ProjectTypeGUID => ProjectTypeGUIDs.cppGuid;
+        public override string SolutionConfig => "Win32";
+        public override string ProjectSuffix => "vcxproj";
+        public override string Command => "OpenConApp";
+        public override FileSpec[] FileSpecs => CPPFileSpecs.CPPSpecs;
+        public override List<string> Folders => null;
+    }
+----
+
+
+== Choosing a version of Visual Studio
+
+The `VSVersion` property of the ProgramGenerator interface controls which version of Visual Studio is opened.
+
+For Visual Studio 2017 or later, there can be more than one instance or "workflow" installed. For example, there may be
+an instance of Visual Studio installed for C++ development and a different one for C# development.
+
+Installations of Visual Studio 2017 register themselves on installation and are enumerable via a COM interface. In C# we can
+use the namespace `Microsoft.VisualStudio.Setup.Configuration` and  
+

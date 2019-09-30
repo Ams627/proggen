@@ -49,6 +49,7 @@
     <Compile Include="RegistryNativeMethods.cs" />
     <Compile Include="VS2017AppData.cs" />
     <Compile Include="Vs2017SetupConfig.cs" />
+    <Compile Include="VsInfoException.cs" />
     <Compile Include="VSInstanceInfo.cs" />
   </ItemGroup>
   <ItemGroup>
