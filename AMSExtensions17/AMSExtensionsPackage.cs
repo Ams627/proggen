@@ -191,6 +191,12 @@ namespace AMS.AMSExtensions
         void ProcessOpenCSharpConApp(object sender, EventArgs e)
         {
             Debug.WriteLine("Open CSharp Console App");
+            IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+            Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+            Guid debugPane = VSConstants.GUID_OutWindowDebugPane;
+            outWindow.GetPane(ref debugPane, out var paneToWriteTo);
+
+
             DTE dte = (DTE)GetService(typeof(EnvDTE.DTE));
 
             var prjs = dte.Solution.Projects;
@@ -210,7 +216,10 @@ namespace AMS.AMSExtensions
                 //System.Windows.Forms.MessageBox.Show("hello: " + programfname);
 
                 dte.ItemOperations.OpenFile(programfname, EnvDTE.Constants.vsViewKindCode);
-                var findString = @"static void Main\(string\[\] args\)\r?\n +{";
+
+                var findString = "//startstarttypingtypingherehere";
+                paneToWriteTo.OutputString($"opened file {programfname}\r\n");
+                paneToWriteTo.OutputString($"searching for {findString}\r\n");
 
                 dte.ActiveDocument.Activate();
                 dte.Find.PatternSyntax = vsFindPatternSyntax.vsFindPatternSyntaxRegExpr;
@@ -223,18 +232,22 @@ namespace AMS.AMSExtensions
                 dte.Find.Action = vsFindAction.vsFindActionFind;
                 if (dte.Find.Execute() == vsFindResult.vsFindResultNotFound)
                 {
-                    throw new System.Exception("vsFindResultNotFound");
+                    paneToWriteTo.OutputString($"{findString} not found.\r\n");
+                }
+                else
+                {
+                    paneToWriteTo.OutputString($"{findString} found\r\n");
                 }
                 dte.Windows.Item("{CF2DDC32-8CAD-11D2-9302-005345000000}").Close();
                 TextSelection ts = (TextSelection)dte.ActiveDocument.Selection;
-                ts.CharRight();
-                ts.Indent();
+                ts.Delete();
 
                 dte.ExecuteCommand("File.SaveAll", string.Empty);
                 dte.ExecuteCommand("Build.BuildSolution");
                 dte.ActiveDocument.Activate();
             }
 
+            paneToWriteTo.Activate(); // Brings this pane into view
         }
 
         void ProcessOpenWPFApp(object sender, EventArgs e)
