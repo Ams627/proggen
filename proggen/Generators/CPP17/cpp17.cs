@@ -18,7 +18,7 @@ namespace Proggen
         public override string SolutionConfig => "Win32";
         public override string ProjectSuffix => "vcxproj";
         public override string Command => "OpenConApp";
-        public override string CommandParam => "$$(PROJECTNAME).cpp";
+        public override string CommandParam => "";
         public override FileSpec[] FileSpecs => Proggen.Generators.Common.CPPFileSpecs.CPPSpecs;
         public override List<string> Folders => null;
 

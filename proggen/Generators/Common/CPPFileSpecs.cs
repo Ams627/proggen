@@ -190,6 +190,8 @@ namespace Proggen.Generators.Common
                     "#include <cassert>",
                     "#include <array>",
                     "#include <vector>",
+                    "#include <thread>",
+                    "#include <future>",
                     "#include <deque>",
                     "#include <iostream>",
                     "#include <fstream>",
