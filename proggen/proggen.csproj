@@ -71,6 +71,7 @@
     <Compile Include="Generators\CS17\cs17.cs" />
     <Compile Include="Generators\CS17\CS19.cs" />
     <Compile Include="Generators\NetCore15\netcore15.cs" />
+    <Compile Include="Generators\NetCore3\NetCore3.cs" />
     <Compile Include="Generators\NetCore17\netcore17.cs" />
     <Compile Include="Generators\WebAPI17\WebAPI17.cs" />
     <Compile Include="Generators\WPF15\wpf15.cs" />
