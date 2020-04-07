@@ -9,9 +9,30 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE;
+using System.Collections.Generic;
+using System.IO;
 
 namespace AMS.AMSExtensions
 {
+    public abstract class WindowKinds
+    {
+        public const string vsWindowKindKindStartPage = "{387CB18D-6153-4156-9257-9AC3F9207BBE}";
+        public const string vsWindowKindCommunityWindow = "{96DB1F3B-0E7A-4406-B73E-C6F0A2C67B97}";
+        public const string vsWindowKindDeviceExplorer = "{B65E9355-A4C7-4855-96BB-1D3EC8514E8F}";
+        public const string vsWindowKindBookmarks = "{A0C5197D-0AC7-4B63-97CD-8872A789D233}";
+        public const string vsWindowKindApplicationBrowser = "{399832EA-70A8-4AE7-9B99-3C0850DAD152}";
+        public const string vsWindowKindFavorites = "{57DC5D59-11C2-4955-A7B4-D7699D677E93}";
+        public const string vsWindowKindErrorList = "{D78612C7-9962-4B83-95D9-268046DAD23A}";
+        public const string vsWindowKindHelpSearch = "{46C87F81-5A06-43A8-9E25-85D33BAC49F8}";
+        public const string vsWindowKindHelpIndex = "{73F6DD58-437E-11D3-B88E-00C04F79F802}";
+        public const string vsWindowKindHelpContents = "{4A791147-19E4-11D3-B86B-00C04F79F802}";
+        public const string vsWindowKindCallBrowser = "{5415EA3A-D813-4948-B51E-562082CE0887}";
+        public const string vsWindowKindCodeDefinition = "{588470CC-84F8-4A57-9AC4-86BCA0625FF4}";
+        public const string vsWindowKindImmediate = "{28836128-FC2C-11D2-A433-00C04F72D18A}";
+        public const string vsWindowKindTeamExplorer = "{131369F2-062D-44A2-8671-91FF31EFB4F4}";
+        public const string vsWindowKindTestExplorer = "{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}";
+    }
+
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [Guid(GuidList.guidAMSExPkgString)]
@@ -57,6 +78,13 @@ namespace AMS.AMSExtensions
         {
             DTE dte = (DTE)GetService(typeof(EnvDTE.DTE));
 
+            var l1 = new List<string>();
+            var windows = dte.Windows;
+            foreach (Window win in windows)
+            {
+                l1.Add($"{win.Kind} {win.ObjectKind}");
+            }
+            File.WriteAllLines(@"c:\temp\w1.txt", l1);
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindClassView).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindSolutionExplorer).Close();
@@ -75,7 +103,10 @@ namespace AMS.AMSExtensions
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindServerExplorer).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindSolutionExplorer).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindToolbox).Close();
-            dte.Windows.Item("{131369F2-062D-44A2-8671-91FF31EFB4F4}").Close();
+            dte.Windows.Item(EnvDTE.Constants.vsWindowKindTaskList).Close();
+            dte.Windows.Item(WindowKinds.vsWindowKindTeamExplorer).Close();
+            dte.Windows.Item(WindowKinds.vsWindowKindErrorList).Close();
+            dte.Windows.Item(WindowKinds.vsWindowKindTestExplorer).Close();
         }
 
         bool ShowProjectItems(ProjectItems pritems, int i, string searchname)
@@ -195,6 +226,7 @@ namespace AMS.AMSExtensions
             Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
             Guid debugPane = VSConstants.GUID_OutWindowDebugPane;
             outWindow.GetPane(ref debugPane, out var paneToWriteTo);
+            paneToWriteTo.OutputString("Opening start file\r\n");
 
 
             DTE dte = (DTE)GetService(typeof(EnvDTE.DTE));

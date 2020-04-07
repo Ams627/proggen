@@ -107,7 +107,7 @@ namespace Proggen.Generators.Common
                     "    <AppDesignerFolder>Properties</AppDesignerFolder>",
                     "    <RootNamespace>$$(PROJECTNAMECAMEL)</RootNamespace>",
                     "    <AssemblyName>$$(PROJECTNAMECAMEL)</AssemblyName>",
-                    "    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>",
+                    "    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>",
                     "    <FileAlignment>512</FileAlignment>",
                     "    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>",
                     "  </PropertyGroup>",

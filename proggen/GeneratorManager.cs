@@ -1,21 +1,19 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Proggen.Generators.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Proggen.Generators.Common;
-using Microsoft.Win32;
 
 namespace Proggen
 {
-    class GeneratorManager
+    internal class GeneratorManager
     {
         private const string InstanceEnvVar = "VSDefaultInstanceID";
+        private static readonly Dictionary<string, ProgramGenerator> Generators = new Dictionary<string, ProgramGenerator>(StringComparer.OrdinalIgnoreCase);
         private static HashSet<string> _generatorNames;
-        public static List<string> HelpTexts { get; private set;}
         static GeneratorManager()
         {
             HelpTexts = new List<string>();
@@ -46,8 +44,28 @@ namespace Proggen
             }
         }
 
-        private static readonly Dictionary<string, ProgramGenerator> Generators = new Dictionary<string, ProgramGenerator>(StringComparer.OrdinalIgnoreCase);
+        public static List<string> HelpTexts { get; private set; }
+        public static void Generate(string progname)
+        {
+            if (Generators.TryGetValue(progname, out ProgramGenerator generator))
+            {
+                generator.Generate();
+                StartVisualStudio(generator.VSVersion, generator.Command, generator.CommandParam);
+            }
+            else
+            {
+                throw new Exception("There is no generator called '" + progname + "'");
+            }
+        }
 
+        public static bool IsAGenarator(string s)
+        {
+            return _generatorNames.Contains(s);
+        }
+
+        /// <summary>
+        /// A generator is an executable having the same file name as
+        /// </summary>
         public static void MakeAllGenerators()
         {
             var fullpath = System.Reflection.Assembly.GetEntryAssembly().Location;
@@ -64,29 +82,9 @@ namespace Proggen
                 }
             }
         }
-
-        public static bool IsAGenarator(string s)
-        {
-            return _generatorNames.Contains(s);
-        }
-
-        public static void Generate(string progname)
-        {
-            ProgramGenerator generator;
-            if (Generators.TryGetValue(progname, out generator))
-            {
-                generator.Generate();
-                StartVisualStudio(generator.VSVersion, generator.Command, generator.CommandParam);
-            }
-            else
-            {
-                throw new Exception("There is no generator called '" + progname + "'");
-            }
-        }
-
         public static void StartVisualStudio(string vsVersion, string command, string commandParam)
         {
-            var vsExecutableName="";
+            var vsExecutableName = "";
             var amsExtensions = false;
 
             if (vsVersion == "2010")
@@ -119,7 +117,7 @@ namespace Proggen
                 var vsConfig = new VS2017Info.Vs2017SetupConfig();
                 var instances = vsConfig.VSInstances;
 
-                // first get the numeric version number of the version of Visual Studio we wish to start. For VS2017, this is 15, for 
+                // first get the numeric version number of the version of Visual Studio we wish to start. For VS2017, this is 15, for
                 // VS2019 this is 16.
                 var ver = vsVersion == "2017" ? 15 : 16;
 
@@ -131,7 +129,7 @@ namespace Proggen
                     var dotPos = x.Version.IndexOf(".");
                     var numericVersion = Convert.ToInt32(x.Version.Substring(0, dotPos));
                     return numericVersion == ver;
-                }).Where(y=>y.ProductPath.EndsWith("devenv.exe"));
+                }).Where(y => y.ProductPath.EndsWith("devenv.exe"));
 
                 var instanceToStart = instancesForVersion.First();
 
@@ -139,12 +137,11 @@ namespace Proggen
 
                 if (instancesForVersion.Count() > 1)
                 {
-
                     var defaultInstanceId = ver == 15 ? Environment.GetEnvironmentVariable("VSDefaultInstanceID") : Environment.GetEnvironmentVariable("VSDefaultInstanceID19");
 
                     if (!string.IsNullOrWhiteSpace(defaultInstanceId))
                     {
-                        foreach(var instance in instancesForVersion)
+                        foreach (var instance in instancesForVersion)
                         {
                             if (instance.Id == defaultInstanceId)
                             {
@@ -208,7 +205,7 @@ namespace Proggen
                 command = command + "";
                 // command = "\"" + command + " " + VSGlobals.VSCommandParam + "\"";
             }
-            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + (amsExtensions ?  (" " + command) : "");
+            process.StartInfo.Arguments = Path.Combine(VSGlobals.ProjectName, VSGlobals.ProjectName + ".sln") + (amsExtensions ? (" " + command) : "");
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.Start();
             process.WaitForInputIdle();
