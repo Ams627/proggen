@@ -12,7 +12,7 @@ namespace Proggen.Generators.Common
         private static string errorStuff =
             sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\n" +
             sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\n" +
-            sixteen + "Console.Error.WriteLine(progname + \": Error: \" + ex.Message);";
+            sixteen + "Console.Error.WriteLine($\"{progname} Error: {ex.Message}\");";
 
         public static FileSpec[] CSConsoleSpecs =
         {
@@ -25,6 +25,8 @@ namespace Proggen.Generators.Common
                     "using System.IO;",
                     "using System.Linq;",
                     "using System.Text;",
+                    "using System.Text.RegularExpressions;",
+                    "using System.Xml.Linq;",
                     "using System.Threading.Tasks;\n",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",
@@ -120,6 +122,7 @@ namespace Proggen.Generators.Common
                     "    <DefineConstants>DEBUG;TRACE</DefineConstants>",
                     "    <ErrorReport>prompt</ErrorReport>",
                     "    <WarningLevel>4</WarningLevel>",
+                    "    <LangVersion>7.3</LangVersion>",
                     "  </PropertyGroup>",
                     "  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|$$(SOLUTIONCONFIGNOSPACE)' \">",
                     "    <PlatformTarget>$$(SOLUTIONCONFIGNOSPACE)</PlatformTarget>",
@@ -129,6 +132,7 @@ namespace Proggen.Generators.Common
                     "    <DefineConstants>TRACE</DefineConstants>",
                     "    <ErrorReport>prompt</ErrorReport>",
                     "    <WarningLevel>4</WarningLevel>",
+                    "    <LangVersion>7.3</LangVersion>",
                     "  </PropertyGroup>",
                     "  <ItemGroup>",
                     "    <Reference Include=\"System\" />",
@@ -182,6 +186,8 @@ namespace Proggen.Generators.Common
                     "using System.IO;",
                     "using System.Linq;",
                     "using System.Text;",
+                    "using System.Text.RegularExpressions;",
+                    "using System.Xml.Linq;",
                     "using System.Threading.Tasks;\n",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",

@@ -34,6 +34,8 @@ namespace Proggen.Generators.Common
                     "using System.Data;",
                     "using System.Linq;",
                     "using System.Threading.Tasks;",
+                    "using System.Text.RegularExpressions;",
+                    "using System.Xml.Linq;",
                     "using System.Windows;",
                     "",
                     "namespace $$(PROJECTNAMECAMEL)",

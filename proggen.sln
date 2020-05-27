@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 16
-VisualStudioVersion = 16.0.29319.158
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30014.187
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proggen", "proggen\proggen.csproj", "{453B2BE0-5862-4EFF-8E46-648EE7395C1B}"
 EndProject
