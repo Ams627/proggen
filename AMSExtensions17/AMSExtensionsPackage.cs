@@ -104,9 +104,13 @@ namespace AMS.AMSExtensions
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindSolutionExplorer).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindToolbox).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindTaskList).Close();
+            File.WriteAllLines(@"c:\temp\ww1.txt", new [] {"w1"});
             dte.Windows.Item(WindowKinds.vsWindowKindTeamExplorer).Close();
+            File.WriteAllLines(@"c:\temp\ww1.txt", new[] { "w2" });
             dte.Windows.Item(WindowKinds.vsWindowKindErrorList).Close();
+            File.WriteAllLines(@"c:\temp\ww1.txt", new[] { "w3" });
             dte.Windows.Item(WindowKinds.vsWindowKindTestExplorer).Close();
+            File.WriteAllLines(@"c:\temp\ww1.txt", new[] { "w4" });
         }
 
         bool ShowProjectItems(ProjectItems pritems, int i, string searchname)
