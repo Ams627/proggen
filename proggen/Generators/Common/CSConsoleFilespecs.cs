@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,13 +9,24 @@ namespace Proggen.Generators.Common
 {
     static class CSConsoleFileSpecs
     {
+        static CSConsoleFileSpecs()
+        {
+            var binFolder= Environment.GetEnvironmentVariable("PROGGENBINFOLDER");
+            if (!string.IsNullOrEmpty(binFolder) && Directory.Exists(binFolder))
+            {
+                postBuildStep = $@"  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) {binFolder}</PostBuildEvent>
+   </PropertyGroup>";
+            }
+        }
+        private static string postBuildStep = "";
         private static string sixteen = new string(' ', 16);
         private static string errorStuff =
-            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\n" +
-            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\n" +
+            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\r\n" +
+            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\r\n" +
             sixteen + "Console.Error.WriteLine($\"{progname} Error: {ex.Message}\");";
 
-        public static FileSpec[] CSConsoleSpecs =
+        public static FileSpec[] CSConsoleSpecs => new []
         {
             new FileSpec {
                 Pathname = "$$(PROJECTNAMECAMEL)/Program.cs",
@@ -27,14 +39,14 @@ namespace Proggen.Generators.Common
                     "using System.Text;",
                     "using System.Text.RegularExpressions;",
                     "using System.Xml.Linq;",
-                    "using System.Threading.Tasks;\n",
+                    "using System.Threading.Tasks;\r\n",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",
                     "    class Program",
                     "    {",
                     "        private static void Main(string[] args)",
                     "        {",
-                    $"            try\n            {{\n                //startstarttypingtypingherehere\n            }}\n            catch (Exception ex)\n            {{\n{errorStuff}\n            }}\n",
+                    $"            try\r\n            {{\r\n                //startstarttypingtypingherehere\r\n            }}\r\n            catch (Exception ex)\r\n            {{\r\n{errorStuff}\r\n            }}\r\n",
                     "        }",
                     "    }",
                     "}"
@@ -152,6 +164,7 @@ namespace Proggen.Generators.Common
                     "    <None Include=\"App.config\" />",
                     "  </ItemGroup>",
                     "  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />",
+                    postBuildStep,
                     "  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. ",
                     "       Other similar extension points exist, see Microsoft.Common.targets.",
                     "  <Target Name=\"BeforeBuild\">",
@@ -171,8 +184,8 @@ namespace Proggen.Generators.Common
     {
         private static string sixteen = new string(' ', 16);
         private static string errorStuff =
-            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\n" +
-            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\n" +
+            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\r\n" +
+            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\r\n" +
             sixteen + "Console.Error.WriteLine(progname + \": Error: \" + ex.Message);";
 
         public static FileSpec[] NetCore3Specs =
@@ -188,14 +201,14 @@ namespace Proggen.Generators.Common
                     "using System.Text;",
                     "using System.Text.RegularExpressions;",
                     "using System.Xml.Linq;",
-                    "using System.Threading.Tasks;\n",
+                    "using System.Threading.Tasks;\r\n",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",
                     "    class Program",
                     "    {",
                     "        static void Main(string[] args)",
                     "        {",
-                    $"            try\n            {{\n                //startstarttypingtypingherehere\n            }}\n            catch (Exception ex)\n            {{\n{errorStuff}\n            }}\n",
+                    $"            try\r\n            {{\r\n                //startstarttypingtypingherehere\r\n            }}\r\n            catch (Exception ex)\r\n            {{\r\n{errorStuff}\r\n            }}\r\n",
                     "        }",
                     "    }",
                     "}"

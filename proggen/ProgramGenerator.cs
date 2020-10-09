@@ -64,14 +64,8 @@ namespace Proggen
             {
                 var relativePathname = VSGlobals.ExpandMacros(filespec.Pathname);
                 var fullPathname = Path.Combine(VSGlobals.ProjectName, relativePathname);
-                using (var file = new StreamWriter(fullPathname))
-                {
-                    foreach (var line in filespec.Contents)
-                    {
-                        var outputline = VSGlobals.ExpandMacros(line);
-                        file.WriteLine(outputline.Replace("\n", "\r\n"));
-                    }
-                }
+                var output = filespec.Contents.Select(VSGlobals.ExpandMacros);
+                File.WriteAllLines(fullPathname, output);
             }
         }
     }

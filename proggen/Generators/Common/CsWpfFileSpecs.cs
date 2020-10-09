@@ -107,7 +107,7 @@ namespace Proggen.Generators.Common
                     "                System.Diagnostics.Debug.WriteLine($\"Thickness : {thickness.Left},{thickness.Top},{thickness.Right},{thickness.Bottom}\");",
                     "            }",
                     "            return value;",
-                    "        }\n",
+                    "        }\r\n",
                     "        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)",
                     "        {",
                     "            throw new NotImplementedException();",

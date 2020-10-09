@@ -85,11 +85,15 @@ namespace AMS.AMSExtensions
                 l1.Add($"{win.Kind} {win.ObjectKind}");
             }
             File.WriteAllLines(@"c:\temp\w1.txt", l1);
-            dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindClassView).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindSolutionExplorer).Close();
+
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindFindResults1).Close();
+            dte.Windows.Item(EnvDTE.Constants.vsWindowKindFindResults2).IsFloating = false;
+
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindFindResults2).Close();
+            dte.Windows.Item(EnvDTE.Constants.vsWindowKindFindResults2).IsFloating = false;
+
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindAutoLocals).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindCallStack).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindCommandWindow).Close();
@@ -97,7 +101,11 @@ namespace AMS.AMSExtensions
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindDynamicHelp).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindFindReplace).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindFindSymbolResults).Close();
+
+            // output
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Close();
+            dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).IsFloating = false;
+
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindProperties).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindResourceView).Close();
             dte.Windows.Item(EnvDTE.Constants.vsWindowKindServerExplorer).Close();
@@ -109,7 +117,10 @@ namespace AMS.AMSExtensions
             File.WriteAllLines(@"c:\temp\ww1.txt", new[] { "w2" });
             dte.Windows.Item(WindowKinds.vsWindowKindErrorList).Close();
             File.WriteAllLines(@"c:\temp\ww1.txt", new[] { "w3" });
+
             dte.Windows.Item(WindowKinds.vsWindowKindTestExplorer).Close();
+            dte.Windows.Item(WindowKinds.vsWindowKindTestExplorer).IsFloating = false;
+
             File.WriteAllLines(@"c:\temp\ww1.txt", new[] { "w4" });
         }
 

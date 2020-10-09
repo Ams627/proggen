@@ -11,8 +11,8 @@ namespace Proggen.Generators.Common
     {
         private static string sixteen = new string(' ', 16);
         private static string errorStuff =
-            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\n" +
-            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\n" +
+            sixteen + "var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;\r\n" +
+            sixteen + "var progname = Path.GetFileNameWithoutExtension(fullname);\r\n" +
             sixteen + "Console.Error.WriteLine(progname + \": Error: \" + ex.Message);";
 
         public static FileSpec[] CsCoreCSpecs =
@@ -28,14 +28,14 @@ namespace Proggen.Generators.Common
                     "using System.Text;",
                     "using System.Text.RegularExpressions;",
                     "using System.Xml.Linq;",
-                    "using System.Threading.Tasks;\n",
+                    "using System.Threading.Tasks;\r\n",
                     "namespace $$(PROJECTNAMECAMEL)",
                     "{",
                     "    class Program",
                     "    {",
                     "        private static void Main(string[] args)",
                     "        {",
-                    $"            try\n            {{\n                //startstarttypingtypingherehere\n            }}\n            catch (Exception ex)\n            {{\n{errorStuff}\n            }}\n",
+                    $"            try\r\n            {{\r\n                //startstarttypingtypingherehere\r\n            }}\r\n            catch (Exception ex)\r\n            {{\r\n{errorStuff}\r\n            }}\r\n",
                     "        }",
                     "    }",
                     "}"
