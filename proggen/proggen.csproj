@@ -1,114 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{453B2BE0-5862-4EFF-8E46-648EE7395C1B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>proggen</RootNamespace>
-    <AssemblyName>proggen</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.Setup.Configuration.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.1.16.30\lib\net35\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.interop" Version="1.16.30" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildStats.cs" />
-    <Compile Include="ExtensionCommand.cs" />
-    <Compile Include="GeneratorManager.cs" />
-    <Compile Include="Generators\Common\AutoRegisterAttribute.cs" />
-    <Compile Include="Generators\Common\CommonFileSpecs.cs" />
-    <Compile Include="Generators\Common\CSConsoleFilespecs.cs" />
-    <Compile Include="Generators\Common\CsCoreCFileSpecs.cs" />
-    <Compile Include="Generators\Common\CsWpfFileSpecs.cs" />
-    <Compile Include="Generators\Common\FileSpec.cs" />
-    <Compile Include="Generators\Common\MacroAttribute.cs" />
-    <Compile Include="Generators\Common\MacroBase.cs" />
-    <Compile Include="Generators\Common\ProjectTypeGUIDs.cs" />
-    <Compile Include="Generators\Common\VSMacros.cs" />
-    <Compile Include="Generators\Common\WebAPIFileSpecs.cs" />
-    <Compile Include="Generators\Corec17\Corec17.cs" />
-    <Compile Include="Generators\CPP15\CPP15.cs" />
-    <Compile Include="Generators\Common\CPPFileSpecs.cs" />
-    <Compile Include="Generators\CPP17\cpp17.cs" />
-    <Compile Include="Generators\CPP19\cpp19.cs" />
-    <Compile Include="Generators\CS15\cs15.cs" />
-    <Compile Include="Generators\CS17\cs17.cs" />
-    <Compile Include="Generators\CS17\CS19.cs" />
-    <Compile Include="Generators\NetCore15\netcore15.cs" />
-    <Compile Include="Generators\NetCore3\NetCore3.cs" />
-    <Compile Include="Generators\NetCore17\netcore17.cs" />
-    <Compile Include="Generators\WebAPI17\WebAPI17.cs" />
-    <Compile Include="Generators\WPF15\wpf15.cs" />
-    <Compile Include="Generators\WPF17\wpf17.cs" />
-    <Compile Include="IEnumerableExtensions.cs" />
-    <Compile Include="ProgramGenerator.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Utility.cs" />
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Settings.xml">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VS2017Info\VS2017Info.csproj">
-      <Project>{dbd299ca-a3c3-43a9-ad8a-3e99d47fcaec}</Project>
-      <Name>VS2017Info</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>$(TargetPath) -makeg
-copy $(TargetDir)\*.exe u:\</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

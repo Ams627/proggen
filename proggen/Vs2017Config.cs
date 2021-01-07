@@ -64,10 +64,5 @@ namespace Proggen
                 return _paths;
             }
         }
-
-        [DllImport("Microsoft.VisualStudio.Setup.Configuration.Native.dll", ExactSpelling = true, PreserveSig = true)]
-        private static extern int GetSetupConfiguration(
-        [MarshalAs(UnmanagedType.Interface), Out] out ISetupConfiguration configuration,
-        IntPtr reserved);
     }
 }

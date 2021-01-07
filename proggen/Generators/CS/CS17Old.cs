@@ -8,12 +8,12 @@ using Proggen.Generators.Common;
 namespace Proggen
 {
     [AutoRegister]
-    class CS15 : ProgramGenerator
+    class CS17Old : ProgramGenerator
     {
-        public override string Name => "cs15";
-        public override string Description => "Generate a c# console application for Visual Studio 2015.";
-        public override string VSVersion => "2015";
-        public override string PlatformToolset => "v140";
+        public override string Name => "cs17old";
+        public override string Description => "Generate an old-format C# console application for Visual Studio 2017.";
+        public override string VSVersion => "2017";
+        public override string PlatformToolset => "v141";
         public override Guid ProjectTypeGUID => ProjectTypeGUIDs.csGuid;
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
