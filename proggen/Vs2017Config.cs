@@ -11,26 +11,17 @@ namespace Proggen
     /// </summary>
     class Vs2017Config
     {
-        private const int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
-
         private ISetupConfiguration _setupConfig;
-        private List<string> _paths = new List<string>();
+        private readonly List<string> _paths = new List<string>();
         public Vs2017Config()
         {
             try
             {
-                // Try to CoCreate the class object.
                 _setupConfig = new SetupConfiguration();
             }
-            catch (COMException ex) when (ex.HResult == REGDB_E_CLASSNOTREG)
+            catch (Exception ex)
             {
-                // Try to get the class object using app-local call.
-                var result = GetSetupConfiguration(out _setupConfig, IntPtr.Zero);
-
-                if (result < 0)
-                {
-                    throw new COMException("Failed to get query", result);
-                }
+                throw new COMException("Failed to get query VS2017 instances", ex);
             }
 
             var setupConfig2 = (ISetupConfiguration2)_setupConfig;
@@ -57,17 +48,6 @@ namespace Proggen
         /// <summary>
         /// returns a list of full installation paths for the VS2017 product
         /// </summary>
-        public List<string> InstallationPaths
-        {
-            get
-            {
-                return _paths;
-            }
-        }
-
-        [DllImport("Microsoft.VisualStudio.Setup.Configuration.Native.dll", ExactSpelling = true, PreserveSig = true)]
-        private static extern int GetSetupConfiguration(
-        [MarshalAs(UnmanagedType.Interface), Out] out ISetupConfiguration configuration,
-        IntPtr reserved);
+        public List<string> InstallationPaths => _paths;
     }
 }

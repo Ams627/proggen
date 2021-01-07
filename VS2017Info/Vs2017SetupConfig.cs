@@ -18,18 +18,11 @@ namespace VS2017Info
         {
             try
             {
-                // Try to CoCreate the class object.
                 _setupConfig = new SetupConfiguration();
             }
-            catch (COMException ex) when (ex.HResult == REGDB_E_CLASSNOTREG)
+            catch (Exception ex) 
             {
-                // Try to get the class object using app-local call.
-                var result = GetSetupConfiguration(out _setupConfig, IntPtr.Zero);
-
-                if (result < 0)
-                {
-                    throw new COMException("Failed to get query", result);
-                }
+                throw new Exception($"Cannot create a new SetupConfiguration for Visual Studio", ex);
             }
 
             var setupConfig2 = (ISetupConfiguration2)_setupConfig;
@@ -72,11 +65,5 @@ namespace VS2017Info
                 return _instanceInfos;
             }
         }
-
-        [DllImport("Microsoft.VisualStudio.Setup.Configuration.Native.dll", ExactSpelling = true, PreserveSig = true)]
-        private static extern int GetSetupConfiguration(
-        [MarshalAs(UnmanagedType.Interface), Out] out ISetupConfiguration configuration,
-        IntPtr reserved);
-
     }
 }

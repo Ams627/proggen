@@ -41,6 +41,12 @@ namespace proggen
                     Directory.CreateDirectory(folder);
                 }
                 var filename = Path.Combine(folder, "settings.xml");
+                if (!File.Exists(filename))
+                {
+                    new XDocument(new XElement("Settings")).Save(filename);
+                    return;
+                }
+
                 var doc = XDocument.Load(filename);
 
                 var requiredExtensions = doc.Element("Settings").Elements("RequiredExtensions");
