@@ -113,24 +113,42 @@ namespace Proggen.Generators.Common
                 Pathname = "$$(PROJECTNAMECAMEL)/Program.cs",
                 Contents = new [] {
                     "\uFEFF" + // prepended BOM
-                    "using System;",
-                    "using System.Collections.Generic;",
-                    "using System.IO;",
-                    "using System.Linq;",
-                    "using System.Text;",
-                    "using System.Text.RegularExpressions;",
-                    "using System.Xml.Linq;",
-                    "using System.Threading.Tasks;\r\n",
-                    "namespace $$(PROJECTNAMECAMEL)",
-                    "{",
-                    "    class Program",
-                    "    {",
-                    "        private static void Main(string[] args)",
-                    "        {",
-                    $"            try\r\n            {{\r\n                //startstarttypingtypingherehere\r\n            }}\r\n            catch (Exception ex)\r\n            {{\r\n{errorStuff}\r\n            }}\r\n",
-                    "        }",
-                    "    }",
-                    "}"
+                    @"using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.Threading.Tasks;
+
+namespace Wonk1
+{
+    class Program
+    {
+        private static void Main(string[] args)
+        {
+            try
+            {
+                var server = @""(localdb)\db1"";
+                var dbName = ""db3"";
+                var masterConnstring = DbAccess.GetConnectionString(server, ""master"");
+                var connstring = DbAccess.GetConnectionString(server, dbName);
+                DbAccess.CreateDb(masterConnstring, dbName);
+                DbAccess.CreateOrAlterProcedure(connstring, ""Proc1"", ""CREATE PROCEDURE PROC1 AS RETURN"");
+                //startstarttypingtypingherehere
+            }
+            catch (Exception ex)
+            {
+                var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;
+                var progname = Path.GetFileNameWithoutExtension(fullname);
+                Console.Error.WriteLine($""{progname} Error: {ex.Message}"");
+            }
+
+        }
+    }
+}
+"
                 }
             },
             new FileSpec {
@@ -153,7 +171,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace $$(PROJECTNAMECAMEL)
+namespace Wonk1
+{
     class DbAccess
     {
         public static void RunQuery(string server, string dbName, string sql, Action<IDataReader> readerAction = null, Action<IDbCommand> preExecute = null)
@@ -181,16 +200,9 @@ namespace $$(PROJECTNAMECAMEL)
             }
         }
 
-        public static void RunNonQuery(string server, string dbName, string sql, Action<IDbCommand> preExecute = null)
+        public static void RunNonQuery(string connectionString, string sql, Action<IDbCommand> preExecute = null)
         {
-            var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = server,
-                InitialCatalog = dbName,
-                IntegratedSecurity = true
-            };
-
-            using (var connection = new SqlConnection(builder.ToString()))
+            using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sql, connection))
             {
                 connection.Open();
@@ -199,16 +211,9 @@ namespace $$(PROJECTNAMECAMEL)
             }
         }
 
-        public static object RunScalar(string server, string dbName, string sql, Action<IDbCommand> preExecute = null)
+        public static object RunScalar(string connectionString, string sql, Action<IDbCommand> preExecute = null)
         {
-            var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = server,
-                InitialCatalog = dbName,
-                IntegratedSecurity = true
-            };
-
-            using (var connection = new SqlConnection(builder.ToString()))
+            using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sql, connection))
             {
                 connection.Open();
@@ -217,15 +222,8 @@ namespace $$(PROJECTNAMECAMEL)
             }
         }
 
-        public static void CreateDb(string server, string dbName, string masterdbName = ""master"")
+        public static void CreateDb(string connectionString, string dbName)
         {
-            var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = server,
-                InitialCatalog = masterdbName,
-                IntegratedSecurity = true
-            };
-
             var user = Environment.UserName;
             var domain = Environment.UserDomainName;
 
@@ -234,7 +232,7 @@ namespace $$(PROJECTNAMECAMEL)
             IF NOT EXISTS(SELECT * FROM sys.database_principals WHERE Name = '{user}') CREATE USER {user} FOR LOGIN [{domain}\{user}]
             "";
 
-            using (var connection = new SqlConnection(builder.ToString()))
+            using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sql, connection))
             {
                 connection.Open();
@@ -242,11 +240,22 @@ namespace $$(PROJECTNAMECAMEL)
             }
         }
 
-        public static void CreateOrAlterProcedure(string server, string dbName, string procName, string procCreateSql)
+
+        public static void CreateOrAlterProcedure(string connectionString, string procName, string procCreateSql)
         {
             var spDel = $@""IF EXISTS (SELECT 1 FROM sys.procedures WHERE NAME = '{procName}' AND type = 'P')  DROP PROCEDURE {procName}"";
-            DbAccess.RunNonQuery(server, dbName, spDel);
-            DbAccess.RunNonQuery(server, dbName, procCreateSql);
+            DbAccess.RunNonQuery(connectionString, spDel);
+            DbAccess.RunNonQuery(connectionString, procCreateSql);
+        }
+
+        public static string GetConnectionString(string server, string dbname, bool integratedSecurity = true)
+        {
+            return new SqlConnectionStringBuilder
+            {
+                DataSource = server,
+                InitialCatalog = dbname,
+                IntegratedSecurity = integratedSecurity
+            }.ToString();
         }
     }
 }
