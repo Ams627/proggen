@@ -175,17 +175,10 @@ namespace Wonk1
 {
     class DbAccess
     {
-        public static void RunQuery(string server, string dbName, string sql, Action<IDataReader> readerAction = null, Action<IDbCommand> preExecute = null)
+        public static void RunQuery(string connectionString, string sql, Action<IDataReader> readerAction = null, Action<IDbCommand> preExecute = null)
         {
-            var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = server,
-                InitialCatalog = dbName,
-                IntegratedSecurity = true
-            };
-
             var list = new List<List<object>>();
-            using (var connection = new SqlConnection(builder.ToString()))
+            using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sql, connection))
             {
                 connection.Open();
