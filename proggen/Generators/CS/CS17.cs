@@ -11,7 +11,7 @@ namespace Proggen
         public override string Description => "Generate an new-format C# console application for Visual Studio 2017.";
         public override string VSVersion => "2017";
         public override string PlatformToolset => "v141";
-        public override Guid ProjectTypeGUID => ProjectTypeGUIDs.csGuid;
+        public override Guid ProjectTypeGUID => ProjectTypeGUIDs.csSdkGuid;
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
         public override string Command => "OpenCSharpConApp";

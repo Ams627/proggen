@@ -111,7 +111,7 @@ namespace Proggen
                 vsExecutableName = (string)Registry.GetValue(regkey, "InstallDir", "");
                 vsExecutableName += "devenv.exe";
             }
-            else if (vsVersion == "2017" || vsVersion == "2019")
+            else if (vsVersion == "2017" || vsVersion == "2019" || vsVersion == "2022")
             {
                 // Both VS2017 and VS2019 have the same "private registry" mechanism for storing installed instances:
                 var vsConfig = new VS2017Info.Vs2017SetupConfig();
@@ -119,7 +119,21 @@ namespace Proggen
 
                 // first get the numeric version number of the version of Visual Studio we wish to start. For VS2017, this is 15, for
                 // VS2019 this is 16.
-                var ver = vsVersion == "2017" ? 15 : 16;
+                int ver;
+                switch (vsVersion)
+                {
+                    case "2017":
+                        ver = 15;
+                        break;
+                    case "2019":
+                        ver = 16;
+                        break;
+                    case "2022":
+                        ver = 17;
+                        break;
+                    default:
+                        throw new Exception($"Bad version ({vsVersion}) specified in generator");
+                }
 
                 //Console.WriteLine($"Looking for numeric version ID {ver}");
 

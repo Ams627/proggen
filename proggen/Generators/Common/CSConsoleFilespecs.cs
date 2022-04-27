@@ -106,6 +106,106 @@ namespace Proggen.Generators.Common
             new FileSpec (CommonFileSpecs.GitIgnore)
         };
 
+        public static FileSpec[] CSConsoleSpecsNet6 => new[]
+        {
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/Program.cs",
+                Contents = new [] {
+                    "\uFEFF",
+@"global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Text;
+global using System.Text.RegularExpressions;
+global using System.Xml.Linq;
+global using System.Threading.Tasks;
+
+namespace $$(PROJECTNAMECAMEL);
+class Program
+{
+    private static void Main(string[] args)
+    {
+        try
+        {
+            //startstarttypingtypingherehere
+        }
+        catch (Exception ex)
+        {
+            var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var progname = Path.GetFileNameWithoutExtension(fullname);
+            Console.Error.WriteLine($""{progname}  Error: {ex}"");
+        }
+    }
+}
+"
+                }
+            },
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
+                Contents = new[] { @"<Project Sdk=""Microsoft.NET.Sdk"">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+</Project>" }
+            },
+            new FileSpec (CommonFileSpecs.SlnFileSpec),
+            new FileSpec (CommonFileSpecs.GitIgnore)
+        };
+
+        public static FileSpec[] CSConsoleSpecsNet7 => new[]
+        {
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/Program.cs",
+                Contents = new [] {
+                    "\uFEFF",
+@"global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Text;
+global using System.Text.RegularExpressions;
+global using System.Xml.Linq;
+global using System.Threading.Tasks;
+
+namespace $$(PROJECTNAMECAMEL);
+class Program
+{
+    private static void Main(string[] args)
+    {
+        try
+        {
+            //startstarttypingtypingherehere
+        }
+        catch (Exception ex)
+        {
+            var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var progname = Path.GetFileNameWithoutExtension(fullname);
+            Console.Error.WriteLine($""{progname}  Error: {ex}"");
+        }
+    }
+}
+"
+                }
+            },
+            new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
+                Contents = new[] { @"<Project Sdk=""Microsoft.NET.Sdk"">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>Preview</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+</Project>" }
+            },
+            new FileSpec (CommonFileSpecs.SlnFileSpec),
+            new FileSpec (CommonFileSpecs.GitIgnore)
+        };
+
 
         public static FileSpec[] DbConsoleSpecsNet19 => new[]
 {
@@ -122,7 +222,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Threading.Tasks;
 
-namespace Wonk1
+namespace $$(PROJECTNAMECAMEL);
 {
     class Program
     {
