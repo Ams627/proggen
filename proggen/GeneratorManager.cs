@@ -77,7 +77,7 @@ namespace Proggen
                     var fullGeneratorPath = Path.Combine(dir, name.Trim()) + ".exe";
                     if (!File.Exists(fullGeneratorPath))
                     {
-                        File.Copy(fullpath, fullGeneratorPath);
+                        File.Copy(fullpath, fullGeneratorPath, true);
                     }
                 }
             }

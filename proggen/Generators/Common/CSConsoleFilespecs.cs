@@ -53,12 +53,61 @@ namespace Proggen.Generators.Common
                 }
             },
             new FileSpec {
+                Pathname = "$$(PROJECTNAMECAMEL)/Polyfill.cs",
+                Contents = new [] {
+                    "\uFEFF" + // prepended BOM
+                    @"using System.ComponentModel;
+
+namespace System.Runtime.CompilerServices
+{
+#if !NET5_0_OR_GREATER
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    internal static class IsExternalInit {}
+
+#endif // !NET5_0_OR_GREATER
+
+#if !NET7_0_OR_GREATER
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    internal sealed class RequiredMemberAttribute : Attribute {}
+
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = false)]
+    internal sealed class CompilerFeatureRequiredAttribute : Attribute
+    {
+        public CompilerFeatureRequiredAttribute(string featureName)
+        {
+            FeatureName = featureName;
+        }
+
+        public string FeatureName { get; }
+        public bool   IsOptional  { get; init; }
+
+        public const string RefStructs      = nameof(RefStructs);
+        public const string RequiredMembers = nameof(RequiredMembers);
+    }
+
+#endif // !NET7_0_OR_GREATER
+}
+
+namespace System.Diagnostics.CodeAnalysis
+{
+#if !NET7_0_OR_GREATER
+    [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
+    internal sealed class SetsRequiredMembersAttribute : Attribute {}
+#endif
+}"
+                }
+            },
+            new FileSpec {
                 Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
                 Contents = new[] { @"<Project Sdk=""Microsoft.NET.Sdk"">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net472</TargetFramework>
+    <LangVersion>Latest</LangVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>Embedded</DebugType>
   </PropertyGroup>
 </Project>" }
             },
@@ -197,8 +246,12 @@ class Program
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <LangVersion>Preview</LangVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <DebugType>Embedded</DebugType>
+    <SelfContained>False</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <ImplicitUsings>Enable</ImplicitUsings>
   </PropertyGroup>
 </Project>" }
             },

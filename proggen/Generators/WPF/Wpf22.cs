@@ -11,7 +11,7 @@ namespace Proggen
         public override string Description => "Generate a WPF application for Visual Studio 2015.";
         public override string VSVersion => "2022";
         public override Guid ProjectTypeGUID => ProjectTypeGUIDs.csGuid;
-        public override string PlatformToolset => "v141";
+        public override string PlatformToolset => "v143";
         public override string SolutionConfig => "Any CPU";
         public override string ProjectSuffix => "csproj";
         public override string Command => "OpenWPFApp";
