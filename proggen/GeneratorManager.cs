@@ -13,7 +13,7 @@ namespace Proggen
     {
         private const string InstanceEnvVar = "VSDefaultInstanceID";
         private static readonly Dictionary<string, ProgramGenerator> Generators = new Dictionary<string, ProgramGenerator>(StringComparer.OrdinalIgnoreCase);
-        private static HashSet<string> _generatorNames;
+        private static readonly HashSet<string> _generatorNames;
         static GeneratorManager()
         {
             HelpTexts = new List<string>();
