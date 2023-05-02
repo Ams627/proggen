@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Xml.Linq;
 
 namespace Proggen.Generators.Common;
 
@@ -43,63 +42,6 @@ internal static class CSConsoleFileSpecs
             }
             """;
 
-    private static readonly string StandardUsings =
-        """
-        using System;
-        using System.Collections.Generic;
-        using System.IO;
-        using System.Linq;
-        using System.Text;
-        using System.Text.RegularExpressions;
-        using System.Xml.Linq;
-        using System.Threading.Tasks;
-        """;
-
-    private static readonly string PolyFill = "\uFEFF" +
-        """
-        using System.ComponentModel;
-        
-        namespace System.Runtime.CompilerServices
-        {
-        #if !NET5_0_OR_GREATER
-        
-            [EditorBrowsable(EditorBrowsableState.Never)]
-            internal static class IsExternalInit {}
-        
-        #endif // !NET5_0_OR_GREATER
-        
-        #if !NET7_0_OR_GREATER
-        
-            [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-            internal sealed class RequiredMemberAttribute : Attribute {}
-        
-            [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = false)]
-            internal sealed class CompilerFeatureRequiredAttribute : Attribute
-            {
-                public CompilerFeatureRequiredAttribute(string featureName)
-                {
-                    FeatureName = featureName;
-                }
-        
-                public string FeatureName { get; }
-                public bool   IsOptional  { get; init; }
-        
-                public const string RefStructs      = nameof(RefStructs);
-                public const string RequiredMembers = nameof(RequiredMembers);
-            }
-        
-        #endif // !NET7_0_OR_GREATER
-        }
-        
-        namespace System.Diagnostics.CodeAnalysis
-        {
-        #if !NET7_0_OR_GREATER
-            [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
-            internal sealed class SetsRequiredMembersAttribute : Attribute {}
-        #endif
-        }
-        """;
-
     public static FileSpec[] CSConsoleSpecs => new[]
     {
         new FileSpec {
@@ -111,20 +53,16 @@ internal static class CSConsoleFileSpecs
                 ClassProgram,
             }
         },
-        new FileSpec {
-            Pathname = "$$(PROJECTNAMECAMEL)/Polyfill.cs",
-            Contents = new [] {
-                PolyFill
-            }
-        },
+        CommonFileSpecs.PolyFill,
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
             Contents = new[] {
-                GetCsProj("net48")
+                CommonFileUtils.GetCsProj("net48")
             }
         },
-        new FileSpec (CommonFileSpecs.SlnFileSpec),
-        new FileSpec (CommonFileSpecs.GitIgnore)
+        CommonFileSpecs.SlnFileSpec,
+        CommonFileSpecs.GitIgnore,
+        CommonFileSpecs.PolyFill
     };
 
     public static FileSpec[] CSConsoleSpecsNet5 => new[]
@@ -141,7 +79,7 @@ internal static class CSConsoleFileSpecs
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
             Contents = new[] {
-                GetCsProj("net5", selfContained: false, pubSingle:true)
+                CommonFileUtils.GetCsProj("net5", selfContained: false, pubSingle:true)
         }
         },
         new FileSpec (CommonFileSpecs.SlnFileSpec),
@@ -161,7 +99,7 @@ internal static class CSConsoleFileSpecs
         },
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
-            Contents = new[] { GetCsProj("net6", pubSingle: true, selfContained: false) }
+            Contents = new[] { CommonFileUtils.GetCsProj("net6", pubSingle: true, selfContained: false) }
         },
         new FileSpec (CommonFileSpecs.SlnFileSpec),
         new FileSpec (CommonFileSpecs.GitIgnore)
@@ -180,7 +118,7 @@ internal static class CSConsoleFileSpecs
         },
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
-            Contents = new[] { GetCsProj("net7", rtti:"win10-x64", pubSingle: true, implicitUsings:true) },
+            Contents = new[] { CommonFileUtils.GetCsProj("net7", rtti:"win10-x64", pubSingle: true, implicitUsings:true) },
         },
         new FileSpec (CommonFileSpecs.SlnFileSpec),
         new FileSpec (CommonFileSpecs.GitIgnore)
@@ -200,7 +138,7 @@ internal static class CSConsoleFileSpecs
         },
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
-            Contents = new[] { GetCsProj("net8.0", rtti:"win10-x64", pubSingle: true, implicitUsings:true, langVersion: "preview") },
+            Contents = new[] { CommonFileUtils.GetCsProj("net8.0", rtti:"win10-x64", pubSingle: true, implicitUsings:true, langVersion: "preview") },
         },
         new FileSpec (CommonFileSpecs.SlnFileSpec),
         new FileSpec (CommonFileSpecs.GitIgnore)
@@ -242,9 +180,10 @@ internal static class CSConsoleFileSpecs
                     """
             }
         },
+        CommonFileSpecs.PolyFill,
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/$$(PROJECTNAMECAMEL).$$(SUFFIX)",
-            Contents = new[] { GetCsProj(netVersion: "net48") }
+            Contents = new[] { CommonFileUtils.GetCsProj(netVersion: "net48") }
         },
         new FileSpec
         {
@@ -341,41 +280,6 @@ internal static class CSConsoleFileSpecs
         new FileSpec (CommonFileSpecs.GitIgnore)
     };
 
-    private static string GetCsProj(string netVersion, string langVersion = "Latest", string rtti = "", bool pubSingle = false, bool selfContained = false, bool implicitUsings = false)
-    {
-        var projdoc = XDocument.Parse(
-        $"""
-        <Project Sdk="Microsoft.NET.Sdk">
-          <PropertyGroup>
-            <OutputType>Exe</OutputType>
-            <TargetFramework>{netVersion}</TargetFramework>
-            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-            <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-            <DebugType>Embedded</DebugType>
-          </PropertyGroup>
-        </Project>
-        """);
-
-        var propGroupElement = projdoc.Root.Element("PropertyGroup");
-        if (pubSingle)
-        {
-            propGroupElement.Add(new XElement("PublishSingleFile", true));
-        }
-
-        if (selfContained)
-        {
-            propGroupElement.Add(new XElement("SelfContained", true));
-        }
-
-        if (implicitUsings)
-        {
-            propGroupElement.Add(new XElement("ImplicitUsings", "Enable"));
-        }
-
-        propGroupElement.Add(new XElement("LangVersion", langVersion));
-
-        return projdoc.ToString();
-    }
 
     private static string GetUsings(string[] usings = null, bool global = false)
     {
