@@ -23,7 +23,6 @@ internal static class CommonFileUtils
             <RuntimeIdentifier>win-x64</RuntimeIdentifier>
             <DebugType>Embedded</DebugType>
             <ImplicitUsings>Enable</ImplicitUsings>
-            <LangVersion>Latest</LangVersion>
           </PropertyGroup>
         </Project>
         """);

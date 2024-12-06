@@ -47,9 +47,7 @@ internal static class CSConsoleFileSpecs
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/Program.cs",
             Contents = new [] {
-                GetUsings(),
                 "namespace $$(PROJECTNAMECAMEL);",
-                "",
                 ClassProgram,
             }
         },
@@ -150,34 +148,30 @@ internal static class CSConsoleFileSpecs
         new FileSpec {
             Pathname = "$$(PROJECTNAMECAMEL)/Program.cs",
             Contents = new [] {
-                GetUsings(global : false),
                 """
-                    namespace $$(PROJECTNAMECAMEL);
-                    
-                    class Program
+                namespace $$(PROJECTNAMECAMEL);
+                class Program
+                {
+                    private static void Main(string[] args)
                     {
-                        private static void Main(string[] args)
+                        try
                         {
-                            try
-                            {
-                                var server = @"(localdb)\db1";
-                                var dbName = "db3";
-                                var masterConnstring = DbAccess.GetConnectionString(server, "master");
-                                var connstring = DbAccess.GetConnectionString(server, dbName);
-                                DbAccess.CreateDb(masterConnstring, dbName);
-                                DbAccess.CreateOrAlterProcedure(connstring, "Proc1", "CREATE PROCEDURE PROC1 AS RETURN");
-                                //startstarttypingtypingherehere
-                            }
-                            catch (Exception ex)
-                            {
-                                var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;
-                                var progname = Path.GetFileNameWithoutExtension(fullname);
-                                Console.Error.WriteLine($"{progname} Error: {ex.Message}");
-                            }
-
+                            var server = @"(localdb)\db1";
+                            var dbName = "db3";
+                            var masterConnstring = DbAccess.GetConnectionString(server, "master");
+                            var connstring = DbAccess.GetConnectionString(server, dbName);
+                            DbAccess.CreateDb(masterConnstring, dbName);
+                            DbAccess.CreateOrAlterProcedure(connstring, "Proc1", "CREATE PROCEDURE PROC1 AS RETURN");
+                        }
+                        catch (Exception ex)
+                        {
+                            var fullname = System.Reflection.Assembly.GetEntryAssembly().Location;
+                            var progname = Path.GetFileNameWithoutExtension(fullname);
+                            Console.Error.WriteLine($"{progname} Error: {ex.Message}");
                         }
                     }
-                    """
+                }
+                """
             }
         },
         CommonFileSpecs.PolyFill,
@@ -191,8 +185,6 @@ internal static class CSConsoleFileSpecs
             Contents = new [] {
                 "\uFEFF"+
                 """
-                using System;
-                using System.Collections.Generic;
                 using System.Data;
                 using System.Data.SqlClient;
 
