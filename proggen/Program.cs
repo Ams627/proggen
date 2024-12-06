@@ -29,169 +29,168 @@ using System.Xml.Linq;
 using System.Reflection;
 using proggen;
 
-namespace Proggen
+namespace Proggen;
+
+class Program
 {
-    class Program
+    private static string progname;
+
+    private static void PrintProgramVersion()
     {
-        private static string progname;
+        var asm = System.Reflection.Assembly.GetEntryAssembly();
+        var version = asm.GetName().Version;
+        var buildDate = BuildStats.GetBuildDate(asm);
+        var now = DateTime.Now;
 
-        private static void PrintProgramVersion()
+        Console.WriteLine($"{progname} a Visual Studio solution generator for Visual Studio 2015/7/9.");
+        Console.WriteLine($"{progname} version {version}");
+        Console.WriteLine($"{progname} location: {asm.Location}");
+        Console.WriteLine($"{progname} build date: {buildDate:yyyy-MMM-dd} at {buildDate:HH:mm:ss}");
+        Console.WriteLine($"Current date/time: {now:yyyy-MMM-dd HH:mm:ss}");
+    }
+
+
+    private static void DoGenerate(string projectname, string generator = "")
+    {
+        if (File.Exists(projectname) || Directory.Exists(projectname))
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            var version = asm.GetName().Version;
-            var buildDate = BuildStats.GetBuildDate(asm);
-            var now = DateTime.Now;
-
-            Console.WriteLine($"{progname} a Visual Studio solution generator for Visual Studio 2015/7/9.");
-            Console.WriteLine($"{progname} version {version}");
-            Console.WriteLine($"{progname} location: {asm.Location}");
-            Console.WriteLine($"{progname} build date: {buildDate:yyyy-MMM-dd} at {buildDate:HH:mm:ss}");
-            Console.WriteLine($"Current date/time: {now:yyyy-MMM-dd HH:mm:ss}");
+            Console.Error.WriteLine($"{progname}: file or directory {projectname} already exists.");
         }
-
-
-        private static void DoGenerate(string projectname, string generator = "")
+        else
         {
-            if (File.Exists(projectname) || Directory.Exists(projectname))
+            VSGlobals.ProjectName = projectname;
+            if (string.IsNullOrWhiteSpace(generator))
             {
-                Console.Error.WriteLine($"{progname}: file or directory {projectname} already exists.");
+                generator = progname;
+            }
+            GeneratorManager.Generate(generator);
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        Settings.Go();
+        VSGlobals.ProjectGUID = Guid.NewGuid();
+        var s = VSGlobals.ExpandMacros("$$(PROJECTGUID)");
+
+        var codeBase = System.Reflection.Assembly.GetEntryAssembly().CodeBase;
+        progname = Path.GetFileNameWithoutExtension(codeBase);
+        try
+        {
+            var arglist = args.ToList();
+
+            if (args.Count() == 0)
+            {
+                Console.WriteLine($"{progname} - make various types of Visual Studio solution and start Visual Studio.\n");
+                Console.WriteLine("Usage:\n\n    proggen <SOLUTIONTYPE> <solution-name> <solution-name> ...\n");
+                Console.WriteLine("An instance of Visual Studio is started for each solution name specified.");
+                Console.WriteLine("Solutions types are as follows:\n");
+                foreach (var helpText in GeneratorManager.HelpTexts)
+                {
+                    Console.WriteLine(helpText);
+                }
+                Console.WriteLine("\nAlternatively if this program has the name of one of the solution types\nabove, the solution type parameter is not needed (the solution type is determined from the program name).");
+                Console.WriteLine($"\nSpecifying {progname} -makeg with no other parameters causes proggen to\ncopy itself to each of the solution-types specified above (with\na .exe extension)");
+                Environment.Exit(0);
+            }
+            else if (args[0] == "-makeg" || args[0] == "--makeg")
+            {
+                if (args.Count() > 1)
+                {
+                    throw new Exception("-makeg option does not take parameters");
+                }
+                GeneratorManager.MakeAllGenerators();
+                Environment.Exit(0);
+            }
+            else if (args[0] == "-instances")
+            {
+                if (args.Count() > 1)
+                {
+                    throw new Exception("-instances does not take parameters.");
+                }
+                var vs2017Info = new VS2017Info.Vs2017SetupConfig();
+                var instances = vs2017Info.VSInstances;
+                foreach (var instance in instances)
+                {
+                    Console.WriteLine($"ID: {instance.Id} Path: {Path.Combine(instance.InstalledPath, instance.ProductPath)}");
+                }
+                Environment.Exit(0);
+            }
+            else if (args[0] == "-version" || args[0] == "--version")
+            {
+                PrintProgramVersion();
+                Environment.Exit(0);
+            }
+
+            var generatorName = "";
+            // is the program name a generator name?
+            if (GeneratorManager.IsAGenarator(progname))
+            {
+                generatorName = progname;
+                if (arglist[0] == "-g")
+                {
+                    if (arglist.Count < 2)
+                    {
+                        throw new Exception("You must specify the name of a project to create.");
+                    }
+                    Utility.Shift(ref arglist);
+                }
             }
             else
             {
-                VSGlobals.ProjectName = projectname;
-                if (string.IsNullOrWhiteSpace(generator))
+                bool haveOption = arglist[0][0] == '-';
+                var minargs = haveOption ? 3 : 2;
+                if (arglist.Count < minargs)
                 {
-                    generator = progname;
+                    throw new Exception("You must specify at least one project name.");
                 }
-                GeneratorManager.Generate(generator);
+
+                if (haveOption)
+                {
+                    var option = arglist[0];
+                    if (option != "-g")
+                    {
+                        throw new Exception($"'{option}' is an invalid option");
+                    }
+                    Utility.Shift(ref arglist);
+                }
+
+                generatorName = arglist[0];
+                if (!GeneratorManager.IsAGenarator(generatorName))
+                {
+                    throw new Exception($"'{generatorName}' is not a valid project type.");
+                }
+                Utility.Shift(ref arglist);
+
+                // alternatively an option can go after the project type:
+                var optionAfterGenerator = arglist[0][0] == '-';
+                if (optionAfterGenerator)
+                {
+                    var option = arglist[0];
+                    if (option != "-g")
+                    {
+                        throw new Exception($"'{option}' is an invalid option");
+                    }
+                    Utility.Shift(ref arglist);
+                }
             }
-        }
 
-        static void Main(string[] args)
-        {
-            Settings.Go();
-            VSGlobals.ProjectGUID = Guid.NewGuid();
-            var s = VSGlobals.ExpandMacros("$$(PROJECTGUID)");
-
-            var codeBase = System.Reflection.Assembly.GetEntryAssembly().CodeBase;
-            progname = Path.GetFileNameWithoutExtension(codeBase);
-            try
+            foreach (var project in arglist)
             {
-                var arglist = args.ToList();
-
-                if (args.Count() == 0)
+                if (project[0] == '-')
                 {
-                    Console.WriteLine($"{progname} - make various types of Visual Studio solution and start Visual Studio.\n");
-                    Console.WriteLine("Usage:\n\n    proggen <SOLUTIONTYPE> <solution-name> <solution-name> ...\n");
-                    Console.WriteLine("An instance of Visual Studio is started for each solution name specified.");
-                    Console.WriteLine("Solutions types are as follows:\n");
-                    foreach (var helpText in GeneratorManager.HelpTexts)
-                    {
-                        Console.WriteLine(helpText);
-                    }
-                    Console.WriteLine("\nAlternatively if this program has the name of one of the solution types\nabove, the solution type parameter is not needed (the solution type is determined from the program name).");
-                    Console.WriteLine($"\nSpecifying {progname} -makeg with no other parameters causes proggen to\ncopy itself to each of the solution-types specified above (with\na .exe extension)");
-                    Environment.Exit(0);
-                }
-                else if (args[0] == "-makeg" || args[0] == "--makeg")
-                {
-                    if (args.Count() > 1)
-                    {
-                        throw new Exception("-makeg option does not take parameters");
-                    }
-                    GeneratorManager.MakeAllGenerators();
-                    Environment.Exit(0);
-                }
-                else if (args[0] == "-instances")
-                {
-                    if (args.Count() > 1)
-                    {
-                        throw new Exception("-instances does not take parameters.");
-                    }
-                    var vs2017Info = new VS2017Info.Vs2017SetupConfig();
-                    var instances = vs2017Info.VSInstances;
-                    foreach (var instance in instances)
-                    {
-                        Console.WriteLine($"ID: {instance.Id} Path: {Path.Combine(instance.InstalledPath, instance.ProductPath)}");
-                    }
-                    Environment.Exit(0);
-                }
-                else if (args[0] == "-version" || args[0] == "--version")
-                {
-                    PrintProgramVersion();
-                    Environment.Exit(0);
-                }
-
-                var generatorName = "";
-                // is the program name a generator name?
-                if (GeneratorManager.IsAGenarator(progname))
-                {
-                    generatorName = progname;
-                    if (arglist[0] == "-g")
-                    {
-                        if (arglist.Count < 2)
-                        {
-                            throw new Exception("You must specify the name of a project to create.");
-                        }
-                        Utility.Shift(ref arglist);
-                    }
+                    Console.Error.WriteLine($"{progname}: option {project} ignored.");
                 }
                 else
                 {
-                    bool haveOption = arglist[0][0] == '-';
-                    var minargs = haveOption ? 3 : 2;
-                    if (arglist.Count < minargs)
-                    {
-                        throw new Exception("You must specify at least one project name.");
-                    }
-
-                    if (haveOption)
-                    {
-                        var option = arglist[0];
-                        if (option != "-g")
-                        {
-                            throw new Exception($"'{option}' is an invalid option");
-                        }
-                        Utility.Shift(ref arglist);
-                    }
-
-                    generatorName = arglist[0];
-                    if (!GeneratorManager.IsAGenarator(generatorName))
-                    {
-                        throw new Exception($"'{generatorName}' is not a valid project type.");
-                    }
-                    Utility.Shift(ref arglist);
-
-                    // alternatively an option can go after the project type:
-                    var optionAfterGenerator = arglist[0][0] == '-';
-                    if (optionAfterGenerator)
-                    {
-                        var option = arglist[0];
-                        if (option != "-g")
-                        {
-                            throw new Exception($"'{option}' is an invalid option");
-                        }
-                        Utility.Shift(ref arglist);
-                    }
+                    DoGenerate(project, generatorName);
                 }
-
-                foreach (var project in arglist)
-                {
-                    if (project[0] == '-')
-                    {
-                        Console.Error.WriteLine($"{progname}: option {project} ignored.");
-                    }
-                    else
-                    {
-                        DoGenerate(project, generatorName);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"{progname}: error: {ex}");
             }
         }
-
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"{progname}: error: {ex}");
+        }
     }
+
 }

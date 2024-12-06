@@ -1,6 +1,5 @@
-﻿namespace proggen
+﻿namespace proggen;
+
+internal class DataType
 {
-    internal class DataType
-    {
-    }
 }

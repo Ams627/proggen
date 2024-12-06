@@ -22,56 +22,55 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Proggen
+namespace Proggen;
+
+static class BuildStats
 {
-    static class BuildStats
+    /// <summary>
+    /// The number of bytes to read from the assembly header
+    /// </summary>
+    private const int HeaderSize = 2048;
+
+    /// <summary>
+    /// Extension to return the build date and time for an assembly. Credits to Jeff Attwood for this.
+    /// (https://blog.codinghorror.com/determining-build-date-the-hard-way/)
+    /// 
+    /// </summary>
+    /// <param name="assembly">A System.Reflection.Assembly</param>
+    /// <param name="targetTimeZone">null for UTC</param>
+    /// <returns></returns>
+    public static DateTime GetBuildDate(this Assembly assembly, TimeZoneInfo targetTimeZone = null)
     {
-        /// <summary>
-        /// The number of bytes to read from the assembly header
-        /// </summary>
-        private const int HeaderSize = 2048;
-
-        /// <summary>
-        /// Extension to return the build date and time for an assembly. Credits to Jeff Attwood for this.
-        /// (https://blog.codinghorror.com/determining-build-date-the-hard-way/)
-        /// 
-        /// </summary>
-        /// <param name="assembly">A System.Reflection.Assembly</param>
-        /// <param name="targetTimeZone">null for UTC</param>
-        /// <returns></returns>
-        public static DateTime GetBuildDate(this Assembly assembly, TimeZoneInfo targetTimeZone = null)
+        var localtime = default(DateTime);
+        try
         {
-            var localtime = default(DateTime);
-            try
+            var filePath = assembly.Location;
+            const int peheaderOffset = 60;
+            const int linkerTimestampOffset = 8;
+
+            var buffer = new byte[HeaderSize];
+
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                var filePath = assembly.Location;
-                const int peheaderOffset = 60;
-                const int linkerTimestampOffset = 8;
-
-                var buffer = new byte[HeaderSize];
-
-                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                {
-                    stream.Read(buffer, 0, HeaderSize);
-                }
-
-                var offset = BitConverter.ToInt32(buffer, peheaderOffset);
-                var secondsSince1970 = BitConverter.ToInt32(buffer, offset + linkerTimestampOffset);
-                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-                var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
-
-                var tz = targetTimeZone ?? TimeZoneInfo.Local;
-                localtime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
-            }
-            catch (Exception ex)
-            {
-                // An exception here should be exceedingly rare and there is really nothing we can do here, so just write to the
-                // output window. In general not knowing the build date will be non-fatal
-                System.Diagnostics.Debug.WriteLine("GetBuildDate failed - exception is" + ex.ToString());
+                stream.Read(buffer, 0, HeaderSize);
             }
 
-            return localtime;
+            var offset = BitConverter.ToInt32(buffer, peheaderOffset);
+            var secondsSince1970 = BitConverter.ToInt32(buffer, offset + linkerTimestampOffset);
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
+
+            var tz = targetTimeZone ?? TimeZoneInfo.Local;
+            localtime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
         }
+        catch (Exception ex)
+        {
+            // An exception here should be exceedingly rare and there is really nothing we can do here, so just write to the
+            // output window. In general not knowing the build date will be non-fatal
+            System.Diagnostics.Debug.WriteLine("GetBuildDate failed - exception is" + ex.ToString());
+        }
+
+        return localtime;
     }
 }

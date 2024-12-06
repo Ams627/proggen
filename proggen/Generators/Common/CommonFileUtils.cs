@@ -22,6 +22,8 @@ internal static class CommonFileUtils
             <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
             <RuntimeIdentifier>win-x64</RuntimeIdentifier>
             <DebugType>Embedded</DebugType>
+            <ImplicitUsings>Enable</ImplicitUsings>
+            <LangVersion>Latest</LangVersion>
           </PropertyGroup>
         </Project>
         """);

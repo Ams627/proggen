@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Proggen.Generators.Common;
 
-namespace Proggen.Generators.Common
+class AutoRegisterAttribute : System.Attribute
 {
-    class AutoRegisterAttribute : System.Attribute
-    {
-    }
 }

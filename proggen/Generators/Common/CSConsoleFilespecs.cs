@@ -283,20 +283,13 @@ internal static class CSConsoleFileSpecs
 
     private static string GetUsings(string[] usings = null, bool global = false)
     {
-        usings ??= new[]
-        {
-            "System",
-            "System.Collections.Generic",
-            "System.IO",
-            "System.Linq",
-            "System.Text",
-            "System.Text.RegularExpressions",
-            "System.Xml.Linq",
-            "System.Threading.Tasks",
-        };
+        usings ??=
+        [
+            // no usings now as they're implicit
+        ];
 
         var sb = new StringBuilder();
-        sb.Append("\uFEFF");
+        //sb.Append("\uFEFF");
         foreach (var us in usings)
         {
             if (global)
@@ -307,7 +300,6 @@ internal static class CSConsoleFileSpecs
             sb.Append(us);
             sb.AppendLine(";");
         }
-
         return sb.ToString();
     }
 }

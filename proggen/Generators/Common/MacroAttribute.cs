@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proggen.Generators.Common
+namespace Proggen.Generators.Common;
+
+class MacroAttribute : System.Attribute
 {
-    class MacroAttribute : System.Attribute
+    public string Macroname { get; set; }
+    public MacroAttribute(string macroName)
     {
-        public string Macroname { get; set; }
-        public MacroAttribute(string macroName)
-        {
-            Macroname = macroName;
-        }
+        Macroname = macroName;
     }
 }
