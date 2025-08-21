@@ -1,11 +1,4 @@
-﻿using Proggen.Generators.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Proggen.Generators.Common;
+﻿namespace Proggen.Generators.Common;
 
 static class CsCoreCFileSpecs
 {

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Proggen.Generators.Common;
 
 namespace Proggen;
@@ -19,7 +14,6 @@ class CPP19 : ProgramGenerator
     public override string ProjectSuffix => "vcxproj";
     public override string Command => "OpenConApp";
     public override string CommandParam => "";
-    public override FileSpec[] FileSpecs => Proggen.Generators.Common.CPPFileSpecs.CPPSpecs;
+    public override FileSpec[] FileSpecs => CPPFileSpecs.CPPSpecs;
     public override List<string> Folders => null;
-
 }

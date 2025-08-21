@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Proggen.Generators.Common;
 
 namespace Proggen;

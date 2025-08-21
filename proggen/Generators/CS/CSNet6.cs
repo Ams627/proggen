@@ -1,6 +1,4 @@
 ﻿using Proggen.Generators.Common;
-using System;
-using System.Collections.Generic;
 
 namespace Proggen;
 

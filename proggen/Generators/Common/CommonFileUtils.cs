@@ -20,7 +20,6 @@ internal static class CommonFileUtils
             <OutputType>Exe</OutputType>
             <TargetFramework>{netVersion}</TargetFramework>
             <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-            <RuntimeIdentifier>win-x64</RuntimeIdentifier>
             <DebugType>Embedded</DebugType>
             <ImplicitUsings>Enable</ImplicitUsings>
           </PropertyGroup>
